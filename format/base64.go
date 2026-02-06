@@ -23,17 +23,24 @@
  * SOFTWARE.
  * ==============================================================================
  */
-package digest
+package format
 
-import "golang.org/x/crypto/sha3"
+import "encoding/base64"
 
-type KECCAK256Digester struct {
-	//MessageDigester
+type Base64Coder struct {
+	//DataCoder
 }
 
 // Override
-func (digester KECCAK256Digester) Digest(data []byte) []byte {
-	hash := sha3.NewLegacyKeccak256()
-	hash.Write(data)
-	return hash.Sum(nil)
+func (coder Base64Coder) Encode(data []byte) string {
+	return base64.StdEncoding.EncodeToString(data)
+}
+
+// Override
+func (coder Base64Coder) Decode(string string) []byte {
+	bytes, err := base64.StdEncoding.DecodeString(string)
+	if err != nil {
+		panic(err)
+	}
+	return bytes
 }

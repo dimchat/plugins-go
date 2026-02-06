@@ -25,15 +25,14 @@
  */
 package digest
 
-import "golang.org/x/crypto/sha3"
+import "crypto/sha256"
 
-type KECCAK256Digester struct {
+type SHA256Digester struct {
 	//MessageDigester
 }
 
 // Override
-func (digester KECCAK256Digester) Digest(data []byte) []byte {
-	hash := sha3.NewLegacyKeccak256()
-	hash.Write(data)
-	return hash.Sum(nil)
+func (digester SHA256Digester) Digest(data []byte) []byte {
+	hash := sha256.Sum256(data)
+	return hash[:]
 }

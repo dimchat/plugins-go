@@ -27,7 +27,6 @@ package format
 
 import (
 	"bytes"
-	. "github.com/dimchat/mkm-go/format"
 	"math/big"
 )
 
@@ -39,14 +38,11 @@ func ReverseBytes(data []byte) {
 	}
 }
 
-type Base58Coder struct {}
-
-func (coder Base58Coder) Init() DataCoder {
-	return coder
+type Base58Coder struct {
+	//DataCoder
 }
 
-//-------- IDataCoder
-
+// Override
 func (coder Base58Coder) Encode(data []byte) string {
 	x := big.NewInt(0).SetBytes(data)
 	base := big.NewInt(58)
@@ -61,6 +57,7 @@ func (coder Base58Coder) Encode(data []byte) string {
 	return string(result)
 }
 
+// Override
 func (coder Base58Coder) Decode(string string) []byte {
 	result := big.NewInt(0)
 	input := []byte(string)

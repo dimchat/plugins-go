@@ -1,5 +1,9 @@
-github.com/dimchat/mkm-go v0.3.0 h1:rzc2wR8YP9Lo8GtaBJ6fR4SWBrwEzE+ld+6YNj+2pGY=
-github.com/dimchat/mkm-go v0.3.0/go.mod h1:rRD77W4jdUAkfNA2fBa+co3/ADLpuTE9EXtlrldz39U=
+github.com/dimchat/core-go v0.4.1-0.20260206181553-8767009017ab h1:HvX9LJHwQtoVAkKAZ+tF+hvqsxU7Wf/ejElA+0qKmwA=
+github.com/dimchat/core-go v0.4.1-0.20260206181553-8767009017ab/go.mod h1:3lCoumGJJJBCaa+Z3wPYjjlsZklvDiHD+5oDXgbQykA=
+github.com/dimchat/dkd-go v0.4.1-0.20260131194623-66282771cb1b h1:POt8SAUJBQKUrv6Ptvum+fCGW5IOYGUvDfev4d9dvTo=
+github.com/dimchat/dkd-go v0.4.1-0.20260131194623-66282771cb1b/go.mod h1:hwKy0oYEL+vdcws9rBqOMkUr+y3NUgwUpn+w1pZpi6E=
+github.com/dimchat/mkm-go v0.3.1-0.20260131165850-455224233aeb h1:z1ucd0uXI0cQls9mly2t5Ugia8Z1J6w63DqJt2YD234=
+github.com/dimchat/mkm-go v0.3.1-0.20260131165850-455224233aeb/go.mod h1:rRD77W4jdUAkfNA2fBa+co3/ADLpuTE9EXtlrldz39U=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20210220033148-5ea612d1eb83 h1:/ZScEX8SfEmUGRHs0gxpqteO5nfNW6axyZbBdw9A12g=
 golang.org/x/crypto v0.0.0-20210220033148-5ea612d1eb83/go.mod h1:jdWPYTVW3xRLrWPugEBEK3UY2ZEsg3UU495nc5E+M+I=

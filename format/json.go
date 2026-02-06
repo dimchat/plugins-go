@@ -25,29 +25,23 @@
  */
 package format
 
-import (
-	"encoding/json"
-	. "github.com/dimchat/mkm-go/format"
-)
+import "encoding/json"
 
-type JSONCoder struct {}
-
-func (coder JSONCoder) Init() ObjectCoder {
-	return coder
+type JSONCoder struct {
+	//ObjectCoder
 }
 
-//-------- IObjectCoder
-
+// Override
 func (coder JSONCoder) Encode(object interface{}) string {
 	bytes, err := json.Marshal(object)
 	if err == nil {
 		return StringFromBytes(bytes)
-	} else {
-		//panic("failed to encode to JsON string")
-		return ""
 	}
+	//panic("failed to encode to JSON string")
+	return ""
 }
 
+// Override
 func (coder JSONCoder) Decode(str string) interface{} {
 	bytes := BytesFromString(str)
 	for _, ch := range bytes {
@@ -57,18 +51,16 @@ func (coder JSONCoder) Decode(str string) interface{} {
 			err := json.Unmarshal(bytes, &dict)
 			if err == nil {
 				return dict
-			} else {
-				return nil
 			}
+			return nil
 		} else if ch == '[' {
 			// decode to array
 			var array []interface{}
 			err := json.Unmarshal(bytes, &array)
 			if err == nil {
 				return array
-			} else {
-				return nil
 			}
+			return nil
 		} else if ch != ' ' && ch != '\t' {
 			// error
 			break
