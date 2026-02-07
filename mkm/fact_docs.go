@@ -37,12 +37,15 @@ import (
 	. "github.com/dimchat/mkm-go/format"
 	. "github.com/dimchat/mkm-go/protocol"
 	. "github.com/dimchat/mkm-go/types"
+	. "github.com/dimchat/plugins-go/mem"
 )
 
 /**
  *  General Document Factory
  */
 type GeneralDocumentFactory struct {
+	//DocumentFactory
+
 	_type string
 }
 
@@ -73,11 +76,11 @@ func (factory GeneralDocumentFactory) CreateDocument(data string, signature Tran
 // Override
 func (factory GeneralDocumentFactory) ParseDocument(info StringKeyMap) Document {
 	// check 'did', 'data', 'signature'
-	if !containsKey(info, "data") || !containsKey(info, "signature") {
+	if !ContainsKey(info, "data") || !ContainsKey(info, "signature") {
 		// doc.data should not be empty
 		// doc.signature should not be empty
 		return nil
-		//} else if !containsKey(info, "data") {
+		//} else if !ContainsKey(info, "data") {
 		//	// doc.did should not be empty
 		//	return nil
 	}

@@ -38,12 +38,15 @@ import (
 	. "github.com/dimchat/mkm-go/format"
 	. "github.com/dimchat/mkm-go/protocol"
 	. "github.com/dimchat/mkm-go/types"
+	. "github.com/dimchat/plugins-go/mem"
 )
 
 /**
  *  Base Meta Factory
  */
 type BaseMetaFactory struct {
+	//MetaFactory
+
 	_type MetaType
 }
 
@@ -99,16 +102,16 @@ func (factory BaseMetaFactory) CreateMeta(key VerifyKey, seed string, fingerprin
 // Override
 func (factory BaseMetaFactory) ParseMeta(info StringKeyMap) Meta {
 	// check 'type', 'key', 'seed', 'fingerprint'
-	if !containsKey(info, "type") || !containsKey(info, "key") {
+	if !ContainsKey(info, "type") || !ContainsKey(info, "key") {
 		// meta.type should not be empty
 		// meta.key should not be empty
 		return nil
-	} else if !containsKey(info, "seed") {
-		if containsKey(info, "fingerprint") {
+	} else if !ContainsKey(info, "seed") {
+		if ContainsKey(info, "fingerprint") {
 			//panic("meta error")
 			return nil
 		}
-	} else if !containsKey(info, "fingerprint") {
+	} else if !ContainsKey(info, "fingerprint") {
 		//panic("meta error")
 		return nil
 	}
@@ -134,9 +137,4 @@ func (factory BaseMetaFactory) ParseMeta(info StringKeyMap) Meta {
 	}
 	//panic("meta error")
 	return nil
-}
-
-func containsKey(info StringKeyMap, key string) bool {
-	_, exist := info[key]
-	return exist
 }

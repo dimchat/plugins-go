@@ -46,9 +46,9 @@ func (cache *ThanosCache[K, V]) Init() MemoryCache[K, V] {
 }
 
 // Override
-func (cache *ThanosCache[K, V]) Get(key K) (V, bool) {
-	value, exists := cache._table[key]
-	return value, exists
+func (cache *ThanosCache[K, V]) Get(key K) V {
+	value, _ := cache._table[key]
+	return value
 }
 
 // Override

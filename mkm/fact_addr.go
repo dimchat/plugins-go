@@ -66,8 +66,8 @@ func (factory BaseAddressFactory) GenerateAddress(meta Meta, network EntityType)
 // Override
 func (factory BaseAddressFactory) ParseAddress(str string) Address {
 	cache := GetAddressCache()
-	address, exists := cache.Get(str)
-	if !exists {
+	address := cache.Get(str)
+	if address == nil {
 		address = factory.parse(str)
 		if address != nil {
 			cache.Put(str, address)

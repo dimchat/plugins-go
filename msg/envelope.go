@@ -1,8 +1,13 @@
 /* license: https://mit-license.org
+ *
+ *  Dao-Ke-Dao: Universal Message Module
+ *
+ *                                Written in 2022 by Moky <albert.moky@gmail.com>
+ *
  * ==============================================================================
  * The MIT License (MIT)
  *
- * Copyright (c) 2026 Albert Moky
+ * Copyright (c) 2022 Albert Moky
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,35 +28,35 @@
  * SOFTWARE.
  * ==============================================================================
  */
-package mem
+package dkd
 
-import . "github.com/dimchat/mkm-go/types"
+import (
+	. "github.com/dimchat/core-go/msg"
+	. "github.com/dimchat/dkd-go/protocol"
+	. "github.com/dimchat/mkm-go/protocol"
+	. "github.com/dimchat/mkm-go/types"
+	. "github.com/dimchat/plugins-go/mem"
+)
 
-type MemoryCache[K comparable, V any] interface {
-
-	/**
-	 *  Get value for key
-	 *
-	 * @param key - cache key
-	 * @return cached value
-	 */
-	Get(key K) V
-
-	/**
-	 *  Set value for key
-	 *
-	 * @param key   - cache key
-	 * @param value - cache value
-	 */
-	Put(key K, value V)
-
-	/**
-	 *  Garbage Collection
-	 */
-	ReduceMemory() int
+type MessageEnvelopeFactory struct {
+	//EnvelopeFactory
 }
 
-func ContainsKey(info StringKeyMap, key string) bool {
-	_, exist := info[key]
-	return exist
+func NewEnvelopeFactory() EnvelopeFactory {
+	return &MessageEnvelopeFactory{}
+}
+
+// Override
+func (factory MessageEnvelopeFactory) CreateEnvelope(from, to ID, when Time) Envelope {
+	return NewEnvelope(from, to, when)
+}
+
+// Override
+func (factory MessageEnvelopeFactory) ParseEnvelope(env StringKeyMap) Envelope {
+	// check 'sender'
+	if !ContainsKey(env, "sender") {
+		// env.sender should not empty
+		return nil
+	}
+	return NewEnvelopeWithMap(env)
 }

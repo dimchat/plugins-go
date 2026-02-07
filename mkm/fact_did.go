@@ -63,8 +63,8 @@ func (factory IdentifierFactory) GenerateID(meta Meta, network EntityType, termi
 func (factory IdentifierFactory) CreateID(name string, address Address, terminal string) ID {
 	str := IDConcat(name, address, terminal)
 	cache := GetIDCache()
-	did, exists := cache.Get(str)
-	if !exists {
+	did := cache.Get(str)
+	if did == nil {
 		did = factory.newID(str, name, address, terminal)
 		cache.Put(str, did)
 	}
@@ -74,8 +74,8 @@ func (factory IdentifierFactory) CreateID(name string, address Address, terminal
 // Override
 func (factory IdentifierFactory) ParseID(str string) ID {
 	cache := GetIDCache()
-	did, exists := cache.Get(str)
-	if !exists {
+	did := cache.Get(str)
+	if did == nil {
 		did = factory.parse(str)
 		if did != nil {
 			cache.Put(str, did)
