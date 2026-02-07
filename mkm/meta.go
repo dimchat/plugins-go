@@ -31,16 +31,19 @@
 package mkm
 
 import (
+	. "github.com/dimchat/core-go/mkm"
+	. "github.com/dimchat/core-go/protocol"
 	. "github.com/dimchat/mkm-go/crypto"
-	. "github.com/dimchat/mkm-go/mkm"
+	. "github.com/dimchat/mkm-go/format"
 	. "github.com/dimchat/mkm-go/protocol"
+	. "github.com/dimchat/mkm-go/types"
 )
 
 /**
  *  Default Meta to build ID with 'name@address'
  *
  *  version:
- *      0x01 - MKM
+ *      1 - MKM
  *
  *  algorithm:
  *      CT      = fingerprint = sKey.sign(seed);
@@ -52,31 +55,31 @@ type DefaultMeta struct {
 	BaseMeta
 
 	// caches
-	_addresses map[NetworkType]Address
+	_addresses map[EntityType]Address
 }
 
-func (meta *DefaultMeta) Init(dict map[string]interface{}) Meta {
-	if meta.BaseMeta.Init(dict) != nil {
-		meta._addresses = make(map[NetworkType]Address)
+func (meta *DefaultMeta) InitWithMap(dict StringKeyMap) Meta {
+	if meta.BaseMeta.InitWithMap(dict) != nil {
+		meta._addresses = make(map[EntityType]Address)
 	}
 	return meta
 }
 
-func (meta *DefaultMeta) InitWithType(version MetaType, key VerifyKey, seed string, fingerprint []byte) Meta {
+func (meta *DefaultMeta) InitWithType(version MetaType, key VerifyKey, seed string, fingerprint TransportableData) Meta {
 	if meta.BaseMeta.InitWithType(version, key, seed, fingerprint) != nil {
-		meta._addresses = make(map[NetworkType]Address)
+		meta._addresses = make(map[EntityType]Address)
 	}
 	return meta
 }
 
-//-------- IMeta
-
-func (meta *DefaultMeta) GenerateAddress(network NetworkType) Address {
+// Override
+func (meta *DefaultMeta) GenerateAddress(network EntityType) Address {
 	// check caches
 	address := meta._addresses[network]
 	if address == nil {
 		// generate and cache it
-		address = BTCAddressGenerate(meta.Fingerprint(), network)
+		fingerprint := meta.Fingerprint()
+		address = GenerateBTCAddress(fingerprint.Bytes(), network)
 		meta._addresses[network] = address
 	}
 	return address
@@ -86,8 +89,7 @@ func (meta *DefaultMeta) GenerateAddress(network NetworkType) Address {
  *  Meta to build BTC address for ID
  *
  *  version:
- *      0x02 - BTC
- *      0x03 - ExBTC
+ *      2 - BTC
  *
  *  algorithm:
  *      CT      = key.data;
@@ -98,37 +100,35 @@ func (meta *DefaultMeta) GenerateAddress(network NetworkType) Address {
 type BTCMeta struct {
 	BaseMeta
 
-	// cached
-	_address Address
+	// caches
+	_addresses map[EntityType]Address
 }
 
-func (meta *BTCMeta) Init(dict map[string]interface{}) Meta {
-	if meta.BaseMeta.Init(dict) != nil {
-		meta._address = nil
+func (meta *BTCMeta) InitWithMap(dict StringKeyMap) Meta {
+	if meta.BaseMeta.InitWithMap(dict) != nil {
+		meta._addresses = make(map[EntityType]Address)
 	}
 	return meta
 }
 
-func (meta *BTCMeta) InitWithType(version MetaType, key VerifyKey, seed string, fingerprint []byte) Meta {
+func (meta *BTCMeta) InitWithType(version MetaType, key VerifyKey, seed string, fingerprint TransportableData) Meta {
 	if meta.BaseMeta.InitWithType(version, key, seed, fingerprint) != nil {
-		meta._address = nil
+		meta._addresses = make(map[EntityType]Address)
 	}
 	return meta
 }
 
-//-------- IMeta
-
-func (meta *BTCMeta) GenerateAddress(network NetworkType) Address {
-	if network != BTCMain {
-		return nil
-	}
+// Override
+func (meta *BTCMeta) GenerateAddress(network EntityType) Address {
 	// check caches
-	address := meta._address
+	address := meta._addresses[network]
 	if address == nil {
+		// TODO: compress public key?
+		key := meta.PublicKey()
+		ted := key.Data()
 		// generate and cache it
-		key := meta.Key()
-		address = BTCAddressGenerate(key.Data(), network)
-		meta._address = address
+		address = GenerateBTCAddress(ted.Bytes(), network)
+		meta._addresses[network] = address
 	}
 	return address
 }
@@ -152,32 +152,29 @@ type ETHMeta struct {
 	_address Address
 }
 
-func (meta *ETHMeta) Init(dict map[string]interface{}) Meta {
-	if meta.BaseMeta.Init(dict) != nil {
+func (meta *ETHMeta) InitWithMap(dict StringKeyMap) Meta {
+	if meta.BaseMeta.InitWithMap(dict) != nil {
 		meta._address = nil
 	}
 	return meta
 }
 
-func (meta *ETHMeta) InitWithType(version MetaType, key VerifyKey, seed string, fingerprint []byte) Meta {
+func (meta *ETHMeta) InitWithType(version MetaType, key VerifyKey, seed string, fingerprint TransportableData) Meta {
 	if meta.BaseMeta.InitWithType(version, key, seed, fingerprint) != nil {
 		meta._address = nil
 	}
 	return meta
 }
 
-//-------- IMeta
-
-func (meta *ETHMeta) GenerateAddress(network NetworkType) Address {
-	if network != MAIN {
-		return nil
-	}
+// Override
+func (meta *ETHMeta) GenerateAddress(_ EntityType) Address {
 	// check caches
 	address := meta._address
 	if address == nil {
 		// generate and cache it
-		key := meta.Key()
-		address = ETHAddressGenerate(key.Data())
+		key := meta.PublicKey()
+		ted := key.Data()
+		address = GenerateETHAddress(ted.Bytes())
 		meta._address = address
 	}
 	return address
@@ -187,38 +184,32 @@ func (meta *ETHMeta) GenerateAddress(network NetworkType) Address {
 //  Factory methods for Meta
 //
 
-func NewDefaultMeta(key VerifyKey, seed string, fingerprint []byte) Meta {
-	meta := new(DefaultMeta)
-	meta.InitWithType(MKM, key, seed, fingerprint)
-	return meta
+func NewMetaWithType(version MetaType, key VerifyKey, seed string, fingerprint TransportableData) Meta {
+	meta := &DefaultMeta{}
+	return meta.InitWithType(version, key, seed, fingerprint)
 }
 
-func ParseDefaultMeta(dict map[string]interface{}) Meta {
-	meta := new(DefaultMeta)
-	meta.Init(dict)
-	return meta
+func NewMetaWithMap(dict StringKeyMap) Meta {
+	meta := &DefaultMeta{}
+	return meta.InitWithMap(dict)
 }
 
-func NewBTCMeta(version MetaType, key VerifyKey, seed string, fingerprint []byte) Meta {
-	meta := new(BTCMeta)
-	meta.InitWithType(version, key, seed, fingerprint)
-	return meta
+func NewBTCMetaWithType(version MetaType, key VerifyKey, seed string, fingerprint TransportableData) Meta {
+	meta := &BTCMeta{}
+	return meta.InitWithType(version, key, seed, fingerprint)
 }
 
-func ParseBTCMeta(dict map[string]interface{}) Meta {
-	meta := new(BTCMeta)
-	meta.Init(dict)
-	return meta
+func NewBTCMetaWithMap(dict StringKeyMap) Meta {
+	meta := &BTCMeta{}
+	return meta.InitWithMap(dict)
 }
 
-func NewETHMeta(version MetaType, key VerifyKey, seed string, fingerprint []byte) Meta {
-	meta := new(ETHMeta)
-	meta.InitWithType(version, key, seed, fingerprint)
-	return meta
+func NewETHMetaWithType(version MetaType, key VerifyKey, seed string, fingerprint TransportableData) Meta {
+	meta := &ETHMeta{}
+	return meta.InitWithType(version, key, seed, fingerprint)
 }
 
-func ParseETHMeta(dict map[string]interface{}) Meta {
-	meta := new(ETHMeta)
-	meta.Init(dict)
-	return meta
+func NewETHMetaWithMap(dict StringKeyMap) Meta {
+	meta := &ETHMeta{}
+	return meta.InitWithMap(dict)
 }

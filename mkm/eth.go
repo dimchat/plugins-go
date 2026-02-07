@@ -31,11 +31,12 @@
 package mkm
 
 import (
+	"strings"
+
 	. "github.com/dimchat/mkm-go/digest"
 	. "github.com/dimchat/mkm-go/format"
 	. "github.com/dimchat/mkm-go/protocol"
 	. "github.com/dimchat/mkm-go/types"
-	"strings"
 )
 
 /**
@@ -53,33 +54,14 @@ type ETHAddress struct {
 }
 
 func NewETHAddress(address string) Address {
-	eth := new(ETHAddress)
-	eth.Init(address)
+	eth := &ETHAddress{}
+	eth.InitWithString(address)
 	return eth
 }
 
-//func (address *ETHAddress) Init(string string) Address {
-//	if address.ConstantString.Init(string) != nil {
-//	}
-//	return address
-//}
-
-//-------- IAddress
-
-func (address *ETHAddress) Network() NetworkType {
-	return MAIN
-}
-
-func (address *ETHAddress) IsUser() bool {
-	return true
-}
-
-func (address *ETHAddress) IsGroup() bool {
-	return false
-}
-
-func (address *ETHAddress) IsBroadcast() bool {
-	return false
+// Override
+func (address *ETHAddress) Network() EntityType {
+	return USER
 }
 
 /**
@@ -88,7 +70,7 @@ func (address *ETHAddress) IsBroadcast() bool {
  * @param fingerprint = key.data
  * @return Address object
  */
-func ETHAddressGenerate(fingerprint []byte) Address {
+func GenerateETHAddress(fingerprint []byte) Address {
 	if len(fingerprint) == 65 {
 		fingerprint = fingerprint[1:]
 	}
@@ -105,7 +87,7 @@ func ETHAddressGenerate(fingerprint []byte) Address {
  * @param address - address string
  * @return null on error
  */
-func ETHAddressParse(address string) Address {
+func ParseETHAddress(address string) Address {
 	if isETH(address) {
 		return NewETHAddress(address)
 	} else {
@@ -126,7 +108,7 @@ func eip55(hex string) string {
 			// check for each 4 bits in the hash table
 			// if the first bit is '1',
 			//     change the character to uppercase
-			ch -= (hash[i >> 1] << (i << 2 & 4) & 0x80) >> 2
+			ch -= (hash[i>>1] << (i << 2 & 4) & 0x80) >> 2
 		}
 		sb[i] = ch
 	}

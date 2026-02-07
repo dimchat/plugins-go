@@ -35,7 +35,7 @@ import (
 	. "github.com/dimchat/mkm-go/format"
 	. "github.com/dimchat/mkm-go/protocol"
 	. "github.com/dimchat/mkm-go/types"
-	. "github.com/dimchat/sdk-go/plugins/types"
+	. "github.com/dimchat/plugins-go/types"
 )
 
 /**
@@ -55,38 +55,24 @@ import (
 type BTCAddress struct {
 	ConstantString
 
-	_network NetworkType
+	_network EntityType
 }
 
-func NewBTCAddress(address string, network NetworkType) Address {
-	btc := new(BTCAddress)
-	btc.Init(address, network)
-	return btc
+func NewBTCAddress(address string, network EntityType) Address {
+	btc := &BTCAddress{}
+	return btc.Init(address, network)
 }
 
-func (address *BTCAddress) Init(string string, network NetworkType) Address {
-	if address.ConstantString.Init(string) != nil {
-		address._network = network
+func (addr *BTCAddress) Init(string string, network EntityType) Address {
+	if addr.ConstantString.InitWithString(string) != nil {
+		addr._network = network
 	}
-	return address
+	return addr
 }
 
-//-------- IAddress
-
-func (address *BTCAddress) Network() NetworkType {
-	return address._network
-}
-
-func (address *BTCAddress) IsUser() bool {
-	return NetworkTypeIsUser(address._network)
-}
-
-func (address *BTCAddress) IsGroup() bool {
-	return NetworkTypeIsGroup(address._network)
-}
-
-func (address *BTCAddress) IsBroadcast() bool {
-	return false
+// Override
+func (addr *BTCAddress) Network() EntityType {
+	return addr._network
 }
 
 /**
@@ -96,7 +82,7 @@ func (address *BTCAddress) IsBroadcast() bool {
  * @param network - address type
  * @return Address object
  */
-func BTCAddressGenerate(fingerprint []byte, network NetworkType) Address {
+func GenerateBTCAddress(fingerprint []byte, network EntityType) Address {
 	// 1. digest = ripemd160(sha256(fingerprint))
 	digest := RIPEMD160(SHA256(fingerprint))
 	// 2. head = network + digest
@@ -119,7 +105,7 @@ func BTCAddressGenerate(fingerprint []byte, network NetworkType) Address {
  * @param base58 - address string
  * @return null on error
  */
-func BTCAddressParse(base58 string) Address {
+func ParseBTCAddress(base58 string) Address {
 	// decode
 	data := Base58Decode(base58)
 	if len(data) != 25 {
@@ -133,7 +119,7 @@ func BTCAddressParse(base58 string) Address {
 	BytesCopy(data, 21, suffix, 0, 4)
 	cc := checkCode(prefix)
 	if BytesEqual(cc, suffix) {
-		network := NetworkType(data[0])
+		network := EntityType(data[0])
 		return NewBTCAddress(base58, network)
 	} else {
 		//panic("address check code error")
