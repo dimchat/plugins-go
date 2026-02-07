@@ -35,6 +35,7 @@ import (
 
 	. "github.com/dimchat/mkm-go/mkm"
 	. "github.com/dimchat/mkm-go/protocol"
+	. "github.com/dimchat/plugins-go/mem"
 )
 
 /**
@@ -42,57 +43,54 @@ import (
  */
 type IdentifierFactory struct {
 	//IDFactory
-
-	_identifiers map[string]ID
 }
 
 func NewIdentifierFactory() IDFactory {
-	return &IdentifierFactory{
-		_identifiers: make(map[string]ID, 512),
-	}
+	return &IdentifierFactory{}
 }
 
-func (factory *IdentifierFactory) Init() IDFactory {
-	factory._identifiers = make(map[string]ID, 512)
+func (factory IdentifierFactory) Init() IDFactory {
 	return factory
 }
 
 // Override
-func (factory *IdentifierFactory) GenerateID(meta Meta, network EntityType, terminal string) ID {
+func (factory IdentifierFactory) GenerateID(meta Meta, network EntityType, terminal string) ID {
 	address := GenerateAddress(meta, network)
 	return CreateID(meta.Seed(), address, terminal)
 }
 
 // Override
-func (factory *IdentifierFactory) CreateID(name string, address Address, terminal string) ID {
+func (factory IdentifierFactory) CreateID(name string, address Address, terminal string) ID {
 	str := IDConcat(name, address, terminal)
-	did := factory._identifiers[str]
-	if did == nil {
+	cache := GetIDCache()
+	did, exists := cache.Get(str)
+	if !exists {
 		did = factory.newID(str, name, address, terminal)
-		factory._identifiers[str] = did
+		cache.Put(str, did)
 	}
 	return did
 }
 
 // Override
-func (factory *IdentifierFactory) ParseID(str string) ID {
-	did := factory._identifiers[str]
-	if did == nil {
+func (factory IdentifierFactory) ParseID(str string) ID {
+	cache := GetIDCache()
+	did, exists := cache.Get(str)
+	if !exists {
 		did = factory.parse(str)
 		if did != nil {
-			factory._identifiers[str] = did
+			cache.Put(str, did)
 		}
 	}
 	return did
 }
 
-func (factory *IdentifierFactory) newID(str string, name string, address Address, terminal string) ID {
+func (factory IdentifierFactory) newID(str string, name string, address Address, terminal string) ID {
 	did := &Identifier{}
 	return did.Init(str, name, address, terminal)
 }
 
 // protected
-func (factory *IdentifierFactory) parse(identifier string) ID {
+func (factory IdentifierFactory) parse(identifier string) ID {
 	var name string
 	var address Address
 	var terminal string

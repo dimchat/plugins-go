@@ -35,6 +35,7 @@ import (
 
 	. "github.com/dimchat/mkm-go/mkm"
 	. "github.com/dimchat/mkm-go/protocol"
+	. "github.com/dimchat/plugins-go/mem"
 )
 
 /**
@@ -42,44 +43,41 @@ import (
  */
 type BaseAddressFactory struct {
 	//AddressFactory
-
-	_addresses map[string]Address
 }
 
 func NewAddressFactory() AddressFactory {
-	return &BaseAddressFactory{
-		_addresses: make(map[string]Address, 512),
-	}
+	return &BaseAddressFactory{}
 }
 
-func (factory *BaseAddressFactory) Init() AddressFactory {
-	factory._addresses = make(map[string]Address, 512)
+func (factory BaseAddressFactory) Init() AddressFactory {
 	return factory
 }
 
 // Override
-func (factory *BaseAddressFactory) GenerateAddress(meta Meta, network EntityType) Address {
+func (factory BaseAddressFactory) GenerateAddress(meta Meta, network EntityType) Address {
 	address := meta.GenerateAddress(network)
 	if address != nil {
-		factory._addresses[address.String()] = address
+		cache := GetAddressCache()
+		cache.Put(address.String(), address)
 	}
 	return address
 }
 
 // Override
-func (factory *BaseAddressFactory) ParseAddress(str string) Address {
-	address := factory._addresses[str]
-	if address == nil {
+func (factory BaseAddressFactory) ParseAddress(str string) Address {
+	cache := GetAddressCache()
+	address, exists := cache.Get(str)
+	if !exists {
 		address = factory.parse(str)
 		if address != nil {
-			factory._addresses[str] = address
+			cache.Put(str, address)
 		}
 	}
 	return address
 }
 
 // protected
-func (factory *BaseAddressFactory) parse(str string) Address {
+func (factory BaseAddressFactory) parse(str string) Address {
 	if str == "" {
 		//panic("address is empty")
 		return nil
