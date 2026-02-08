@@ -45,7 +45,7 @@ type IRSAPublicKey interface {
 	EncryptKey
 }
 
-func NewRSAPublicKey(dict StringKeyMap) IRSAPublicKey {
+func NewRSAPublicKeyWithMap(dict StringKeyMap) IRSAPublicKey {
 	key := &RSAPublicKey{}
 	return key.InitWithMap(dict)
 }
