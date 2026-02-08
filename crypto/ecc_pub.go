@@ -27,73 +27,81 @@ package crypto
 
 import (
 	. "github.com/dimchat/core-go/format"
-	. "github.com/dimchat/core-go/protocol"
 	. "github.com/dimchat/mkm-go/crypto"
+	. "github.com/dimchat/mkm-go/digest"
 	. "github.com/dimchat/mkm-go/format"
 	. "github.com/dimchat/mkm-go/types"
+	"github.com/dimchat/plugins-go/crypto/secp256k1"
 )
 
-func NewPlainKey() SymmetricKey {
-	key := &PlainKey{}
-	return key.Init()
-}
-
-func NewPlainKeyWithMap(dict StringKeyMap) SymmetricKey {
-	key := &PlainKey{}
+func NewECCPublicKeyWithMap(dict StringKeyMap) PublicKey {
+	key := &ECCPublicKey{}
 	return key.InitWithMap(dict)
 }
 
 /**
- *  Symmetric key for broadcast message,
- *  which will do nothing when en/decoding message data
+ *  ECC Public Key
+ *
+ *  <blockquote><pre>
+ *  keyInfo format: {
+ *      "algorithm"    : "ECC",
+ *      "curve"        : "secp256k1",
+ *      "data"         : "..." // base64_encode()
+ *  }
+ *  </pre></blockquote>
  */
-type PlainKey struct {
-	//SymmetricKey
+type ECCPublicKey struct {
+	//PublicKey
 	BaseKey
 
 	_data TransportableData
 }
 
-func (key *PlainKey) Init() SymmetricKey {
-	if key.BaseKey.Init() != nil {
-		key.Set("algorithm", PLAIN)
-		key._data = ZeroPlainData()
-	}
-	return key
-}
-
-func (key *PlainKey) InitWithMap(dict StringKeyMap) SymmetricKey {
+func (key *ECCPublicKey) InitWithMap(dict StringKeyMap) PublicKey {
 	if key.BaseKey.InitWithMap(dict) != nil {
-		key._data = ZeroPlainData()
+		// lazy load
+		key._data = nil
 	}
 	return key
-}
-
-// Override
-func (key *PlainKey) Equal(other interface{}) bool {
-	return symmetricKeyEqual(key, other)
 }
 
 //-------- ICryptographyKey
 
 // Override
-func (key *PlainKey) Data() TransportableData {
-	return key._data
+func (key *ECCPublicKey) Data() TransportableData {
+	ted := key._data
+	if ted == nil {
+		text := key.GetString("data", "")
+		// check for raw data (33/65 bytes)
+		size := len(text)
+		if size == 66 || size == 130 {
+			// Hex format
+			bin := HexDecode(text)
+			ted = NewPlainDataWithBytes(bin)
+		} else {
+			// TODO: PEM format?
+		}
+		key._data = ted
+	}
+	return ted
 }
 
-//-------- ISymmetricKey
+//-------- IPublicKey
 
 // Override
-func (key *PlainKey) Encrypt(plaintext []byte, _ StringKeyMap) []byte {
-	return plaintext
+func (key *ECCPublicKey) Verify(data []byte, signature []byte) bool {
+	if len(signature) > 64 {
+		signature = secp256k1.SignatureFromDER(signature)
+	}
+	ted := key.Data()
+	pub := ted.Bytes()
+	if len(pub) == 65 {
+		pub = pub[1:]
+	}
+	return secp256k1.Verify(pub, SHA256(data), signature)
 }
 
 // Override
-func (key *PlainKey) Decrypt(ciphertext []byte, _ StringKeyMap) []byte {
-	return ciphertext
-}
-
-// Override
-func (key *PlainKey) MatchEncryptKey(pKey EncryptKey) bool {
-	return MatchEncryptKey(pKey, key)
+func (key *ECCPublicKey) MatchSignKey(sKey SignKey) bool {
+	return MatchSignKey(sKey, key)
 }
