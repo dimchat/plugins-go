@@ -46,7 +46,7 @@ func NewReliableMessageFactory() ReliableMessageFactory {
 }
 
 // Override
-func (factory *NetworkMessageFactory) ParseReliableMessage(msg StringKeyMap) ReliableMessage {
+func (factory NetworkMessageFactory) ParseReliableMessage(msg StringKeyMap) ReliableMessage {
 	// check 'sender', 'data', 'signature'
 	if !ContainsKey(msg, "sender") || !ContainsKey(msg, "data") || !ContainsKey(msg, "signature") {
 		// msg.sender should not be empty

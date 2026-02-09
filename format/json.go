@@ -25,7 +25,11 @@
  */
 package format
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	. "github.com/dimchat/mkm-go/types"
+)
 
 type JSONCoder struct {
 	//ObjectCoder
@@ -47,7 +51,7 @@ func (coder JSONCoder) Decode(str string) interface{} {
 	for _, ch := range bytes {
 		if ch == '{' {
 			// decode to map
-			var dict map[string]interface{}
+			var dict StringKeyMap
 			err := json.Unmarshal(bytes, &dict)
 			if err == nil {
 				return dict
