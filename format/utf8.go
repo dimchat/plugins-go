@@ -25,23 +25,10 @@
  */
 package format
 
-import (
-	"reflect"
-	"unsafe"
-)
+import . "github.com/dimchat/mkm-go/format"
 
-func StringFromBytes(bytes []byte) string {
-	return *(*string)(unsafe.Pointer(&bytes))
-}
-
-func BytesFromString(string string) []byte {
-	stringHeader := (*reflect.StringHeader)(unsafe.Pointer(&string))
-	sliceHeader := reflect.SliceHeader{
-		Data: stringHeader.Data,
-		Len:  stringHeader.Len,
-		Cap:  stringHeader.Len,
-	}
-	return *(*[]byte)(unsafe.Pointer(&sliceHeader))
+func NewUTF8Coder() StringCoder {
+	return &UTF8Coder{}
 }
 
 type UTF8Coder struct {
@@ -49,13 +36,11 @@ type UTF8Coder struct {
 }
 
 // Override
-func (coder UTF8Coder) Encode(string string) []byte {
-	//return []byte(string)
-	return BytesFromString(string)
+func (coder UTF8Coder) Encode(str string) []byte {
+	return []byte(str)
 }
 
 // Override
 func (coder UTF8Coder) Decode(bytes []byte) string {
-	//return string(bytes)
-	return StringFromBytes(bytes)
+	return string(bytes)
 }

@@ -33,12 +33,12 @@ import (
 	. "github.com/dimchat/mkm-go/format"
 )
 
-type tedFactory struct {
-	//TransportableDataFactory
+func NewTransportableDataFactory() TransportableDataFactory {
+	return &tedFactory{}
 }
 
-func (factory tedFactory) Init() TransportableDataFactory {
-	return factory
+type tedFactory struct {
+	//TransportableDataFactory
 }
 
 // Override

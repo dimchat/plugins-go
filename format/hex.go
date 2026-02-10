@@ -25,7 +25,15 @@
  */
 package format
 
-import "encoding/hex"
+import (
+	"encoding/hex"
+
+	. "github.com/dimchat/mkm-go/format"
+)
+
+func NewHexCoder() DataCoder {
+	return &HexCoder{}
+}
 
 type HexCoder struct {
 	//DataCoder

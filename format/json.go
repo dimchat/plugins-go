@@ -28,8 +28,13 @@ package format
 import (
 	"encoding/json"
 
+	. "github.com/dimchat/mkm-go/format"
 	. "github.com/dimchat/mkm-go/types"
 )
+
+func NewJSONCoder() ObjectCoder {
+	return &JSONCoder{}
+}
 
 type JSONCoder struct {
 	//ObjectCoder
@@ -39,7 +44,7 @@ type JSONCoder struct {
 func (coder JSONCoder) Encode(object interface{}) string {
 	bytes, err := json.Marshal(object)
 	if err == nil {
-		return StringFromBytes(bytes)
+		return string(bytes)
 	}
 	//panic("failed to encode to JSON string")
 	return ""
@@ -47,7 +52,7 @@ func (coder JSONCoder) Encode(object interface{}) string {
 
 // Override
 func (coder JSONCoder) Decode(str string) interface{} {
-	bytes := BytesFromString(str)
+	bytes := []byte(str)
 	for _, ch := range bytes {
 		if ch == '{' {
 			// decode to map

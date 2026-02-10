@@ -60,22 +60,22 @@ func (loader PluginLoader) Load() {
 func (loader PluginLoader) registerCoders() {
 
 	// Base-58
-	SetBase58Coder(&Base58Coder{})
+	SetBase58Coder(NewBase58Coder())
 	// Base-64
-	SetBase64Coder(&Base64Coder{})
+	SetBase64Coder(NewBase64Coder())
 	// HEX
-	SetHexCoder(&HexCoder{})
+	SetHexCoder(NewHexCoder())
 
 	// JSON
-	SetJSONCoder(&JSONCoder{})
+	SetJSONCoder(NewJSONCoder())
 
 	// UTF-8
-	SetUTF8Coder(&UTF8Coder{})
+	SetUTF8Coder(NewUTF8Coder())
 
 	// TED
-	SetTransportableDataFactory(&tedFactory{})
+	SetTransportableDataFactory(NewTransportableDataFactory())
 	// PNF
-	SetTransportableFileFactory(&pnfFactory{})
+	SetTransportableFileFactory(NewTransportableFileFactory())
 
 }
 
@@ -85,13 +85,13 @@ func (loader PluginLoader) registerCoders() {
 func (loader PluginLoader) registerDigesters() {
 
 	// SHA-256
-	SetSHA256Digester(&SHA256Digester{})
+	SetSHA256Digester(NewSHA256Digester())
 
 	// RipeMD-160
-	SetRIPEMD160Digester(&RIPEMD160Digester{})
+	SetRIPEMD160Digester(NewRIPEMD160Digester())
 
 	// Keccak-256
-	SetKECCAK256Digester(&KECCAK256Digester{})
+	SetKECCAK256Digester(NewKECCAK256Digester())
 
 }
 

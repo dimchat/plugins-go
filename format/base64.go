@@ -25,7 +25,15 @@
  */
 package format
 
-import "encoding/base64"
+import (
+	"encoding/base64"
+
+	. "github.com/dimchat/mkm-go/format"
+)
+
+func NewBase64Coder() DataCoder {
+	return &Base64Coder{}
+}
 
 type Base64Coder struct {
 	//DataCoder

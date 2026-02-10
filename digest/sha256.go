@@ -25,7 +25,15 @@
  */
 package digest
 
-import "crypto/sha256"
+import (
+	"crypto/sha256"
+
+	. "github.com/dimchat/mkm-go/digest"
+)
+
+func NewSHA256Digester() MessageDigester {
+	return &SHA256Digester{}
+}
 
 type SHA256Digester struct {
 	//MessageDigester

@@ -26,8 +26,9 @@
 package types
 
 import (
-	. "github.com/dimchat/mkm-go/types"
 	"math/rand"
+
+	. "github.com/dimchat/mkm-go/types"
 )
 
 func BytesEqual(array1, array2 []byte) bool {

@@ -34,12 +34,12 @@ import (
 	. "github.com/dimchat/plugins-go/mem"
 )
 
-type pnfFactory struct {
-	//TransportableFileFactory
+func NewTransportableFileFactory() TransportableFileFactory {
+	return &pnfFactory{}
 }
 
-func (factory pnfFactory) Init() TransportableFileFactory {
-	return factory
+type pnfFactory struct {
+	//TransportableFileFactory
 }
 
 // Override

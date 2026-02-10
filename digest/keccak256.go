@@ -25,7 +25,14 @@
  */
 package digest
 
-import "golang.org/x/crypto/sha3"
+import (
+	. "github.com/dimchat/mkm-go/digest"
+	"golang.org/x/crypto/sha3"
+)
+
+func NewKECCAK256Digester() MessageDigester {
+	return &KECCAK256Digester{}
+}
 
 type KECCAK256Digester struct {
 	//MessageDigester

@@ -28,14 +28,12 @@ package format
 import (
 	"bytes"
 	"math/big"
+
+	. "github.com/dimchat/mkm-go/format"
 )
 
-var base58Alphabets = []byte("123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz")
-
-func ReverseBytes(data []byte) {
-	for i, j := 0, len(data)-1; i < j; i, j = i+1, j-1 {
-		data[i], data[j] = data[j], data[i]
-	}
+func NewBase58Coder() DataCoder {
+	return &Base58Coder{}
 }
 
 type Base58Coder struct {
@@ -53,7 +51,7 @@ func (coder Base58Coder) Encode(data []byte) string {
 		x.DivMod(x, base, mod)
 		result = append(result, base58Alphabets[mod.Int64()])
 	}
-	ReverseBytes(result)
+	reverseBytes(result)
 	return string(result)
 }
 
@@ -71,4 +69,12 @@ func (coder Base58Coder) Decode(string string) []byte {
 		decoded = append([]byte{0x00}, decoded...)
 	}
 	return decoded
+}
+
+var base58Alphabets = []byte("123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz")
+
+func reverseBytes(data []byte) {
+	for i, j := 0, len(data)-1; i < j; i, j = i+1, j-1 {
+		data[i], data[j] = data[j], data[i]
+	}
 }
