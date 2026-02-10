@@ -31,57 +31,47 @@ import (
 	. "github.com/dimchat/mkm-go/types"
 )
 
-type CreateContent func(StringKeyMap) Content
-type CreateCommand func(StringKeyMap) Command
+type FuncCreateContent func(StringKeyMap) Content
+type FuncCreateCommand func(StringKeyMap) Command
 
-func NewContentFactory(fnCreate CreateContent) ContentFactory {
-	return &generalContentFactory{
-		fnCreate: fnCreate,
+func NewContentFactory(create FuncCreateContent) ContentFactory {
+	return &contentFactory{
+		create: create,
 	}
 }
 
-func NewCommandFactory(fnCreate CreateCommand) CommandFactory {
-	return &generalCommandFactory{
-		fnCreate: fnCreate,
+func NewCommandFactory(create FuncCreateCommand) CommandFactory {
+	return &commandFactory{
+		create: create,
 	}
 }
 
 /**
- *  General Content Factory
- *  ~~~~~~~~~~~~~~~~~~~~~~~
+ *  Content Factory
+ *  ~~~~~~~~~~~~~~~
  */
-type generalContentFactory struct {
+type contentFactory struct {
 	//ContentFactory
 
-	fnCreate CreateContent
-}
-
-func (gf *generalContentFactory) Init(fnCreate CreateContent) ContentFactory {
-	gf.fnCreate = fnCreate
-	return gf
+	create FuncCreateContent
 }
 
 // Override
-func (gf *generalContentFactory) ParseContent(content StringKeyMap) Content {
-	return gf.fnCreate(content)
+func (cf *contentFactory) ParseContent(content StringKeyMap) Content {
+	return cf.create(content)
 }
 
 /**
- *  General Command Factory
- *  ~~~~~~~~~~~~~~~~~~~~~~~
+ *  Command Factory
+ *  ~~~~~~~~~~~~~~~
  */
-type generalCommandFactory struct {
+type commandFactory struct {
 	//CommandFactory
 
-	fnCreate CreateCommand
-}
-
-func (gf *generalCommandFactory) Init(fnCreate CreateCommand) CommandFactory {
-	gf.fnCreate = fnCreate
-	return gf
+	create FuncCreateCommand
 }
 
 // Override
-func (gf *generalCommandFactory) ParseCommand(content StringKeyMap) Command {
-	return gf.fnCreate(content)
+func (cf *commandFactory) ParseCommand(content StringKeyMap) Command {
+	return cf.create(content)
 }

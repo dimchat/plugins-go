@@ -32,72 +32,71 @@ import (
 	. "github.com/dimchat/plugins-go/dkd"
 )
 
-func registerCommandFactory(cmd string, fn CreateCommand) {
-	factory := NewCommandFactory(fn)
-	SetCommandFactory(cmd, factory)
-}
-
-func putCommandFactory(cmd string, factory CommandFactory) {
-	SetCommandFactory(cmd, factory)
-}
-
+/**
+ *  Core command factories
+ */
 func registerCommandFactories() {
 
 	// Meta
-	registerCommandFactory(META, func(dict StringKeyMap) Command {
+	registerCommandCreator(META, func(dict StringKeyMap) Command {
 		content := &BaseMetaCommand{}
 		content.InitWithMap(dict)
 		return content
 	})
 
 	// Document
-	registerCommandFactory(DOCUMENTS, func(dict StringKeyMap) Command {
+	registerCommandCreator(DOCUMENTS, func(dict StringKeyMap) Command {
 		content := &BaseDocumentCommand{}
 		content.InitWithMap(dict)
 		return content
 	})
 
 	// Receipt
-	registerCommandFactory(RECEIPT, func(dict StringKeyMap) Command {
+	registerCommandCreator(RECEIPT, func(dict StringKeyMap) Command {
 		content := &BaseReceiptCommand{}
 		content.InitWithMap(dict)
 		return content
 	})
 
 	// Group Commands
-	putCommandFactory("group", &GroupCommandFactory{})
+	SetCommandFactory("group", &GroupCommandFactory{})
 
-	registerCommandFactory(INVITE, func(dict StringKeyMap) Command {
+	registerCommandCreator(INVITE, func(dict StringKeyMap) Command {
 		content := &InviteGroupCommand{}
 		content.InitWithMap(dict)
 		return content
 	})
 	// 'expel' is deprecated (use 'reset' instead)
-	registerCommandFactory(EXPEL, func(dict StringKeyMap) Command {
+	registerCommandCreator(EXPEL, func(dict StringKeyMap) Command {
 		content := &ExpelGroupCommand{}
 		content.InitWithMap(dict)
 		return content
 	})
-	registerCommandFactory(JOIN, func(dict StringKeyMap) Command {
+	registerCommandCreator(JOIN, func(dict StringKeyMap) Command {
 		content := &JoinGroupCommand{}
 		content.InitWithMap(dict)
 		return content
 	})
-	registerCommandFactory(QUIT, func(dict StringKeyMap) Command {
+	registerCommandCreator(QUIT, func(dict StringKeyMap) Command {
 		content := &QuitGroupCommand{}
 		content.InitWithMap(dict)
 		return content
 	})
 	// 'query' is deprecated
-	//registerCommandFactory(QUERY, func(dict StringKeyMap) Command {
+	//registerCommandCreator(QUERY, func(dict StringKeyMap) Command {
 	//	content := &QueryGroupCommand{}
 	//	content.InitWithMap(dict)
 	//	return content
 	//})
-	registerCommandFactory(RESET, func(dict StringKeyMap) Command {
+	registerCommandCreator(RESET, func(dict StringKeyMap) Command {
 		content := &ResetGroupCommand{}
 		content.InitWithMap(dict)
 		return content
 	})
 
+}
+
+func registerCommandCreator(cmd string, fn FuncCreateCommand) {
+	factory := NewCommandFactory(fn)
+	SetCommandFactory(cmd, factory)
 }

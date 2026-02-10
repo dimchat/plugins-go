@@ -26,7 +26,6 @@
 package ext
 
 import (
-	. "github.com/dimchat/core-go/dkd"
 	. "github.com/dimchat/core-go/ext"
 	. "github.com/dimchat/core-go/protocol"
 	. "github.com/dimchat/dkd-go/ext"
@@ -35,7 +34,6 @@ import (
 	. "github.com/dimchat/mkm-go/ext"
 	. "github.com/dimchat/mkm-go/format"
 	. "github.com/dimchat/mkm-go/protocol"
-	. "github.com/dimchat/plugins-go/dkd"
 	. "github.com/dimchat/plugins-go/msg"
 )
 
@@ -47,19 +45,20 @@ type ExtensionLoader struct {
  */
 func (loader ExtensionLoader) Load() {
 
-	loader.registerCoreHelpers()
+	loader.RegisterCoreHelpers()
 
-	loader.registerMessageFactories()
+	loader.RegisterMessageFactories()
 
-	loader.registerContentFactories()
-	loader.registerCommandFactories()
+	loader.RegisterContentFactories()
+	loader.RegisterCommandFactories()
 
 }
 
 /**
  *  Core extensions
  */
-func (loader ExtensionLoader) registerCoreHelpers() {
+// protected
+func (loader ExtensionLoader) RegisterCoreHelpers() {
 
 	// crypto
 	cryptoHelper := NewCryptoKeyGeneralFactory()
@@ -100,7 +99,8 @@ func (loader ExtensionLoader) registerCoreHelpers() {
 /**
  *  Message factories
  */
-func (loader ExtensionLoader) registerMessageFactories() {
+// protected
+func (loader ExtensionLoader) RegisterMessageFactories() {
 
 	// envelope
 	SetEnvelopeFactory(NewEnvelopeFactory())
@@ -114,7 +114,8 @@ func (loader ExtensionLoader) registerMessageFactories() {
 /**
  *  Core content factories
  */
-func (loader ExtensionLoader) registerContentFactories() {
+// protected
+func (loader ExtensionLoader) RegisterContentFactories() {
 	registerContentFactories()
 	registerCustomizedFactories()
 }
@@ -122,6 +123,7 @@ func (loader ExtensionLoader) registerContentFactories() {
 /**
  *  Core command factories
  */
-func (loader ExtensionLoader) registerCommandFactories() {
+// protected
+func (loader ExtensionLoader) RegisterCommandFactories() {
 	registerCommandFactories()
 }

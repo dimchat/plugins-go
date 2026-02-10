@@ -44,20 +44,21 @@ type PluginLoader struct {
  */
 func (loader PluginLoader) Load() {
 
-	loader.registerCoders()
-	loader.registerDigesters()
+	loader.RegisterCoders()
+	loader.RegisterDigesters()
 
-	loader.registerSymmetricKeyFactories()
-	loader.registerAsymmetricKeyFactories()
+	loader.RegisterSymmetricKeyFactories()
+	loader.RegisterAsymmetricKeyFactories()
 
-	loader.registerEntityFactories()
+	loader.RegisterEntityFactories()
 
 }
 
 /**
  *  Data coders
  */
-func (loader PluginLoader) registerCoders() {
+// protected
+func (loader PluginLoader) RegisterCoders() {
 
 	// Base-58
 	SetBase58Coder(NewBase58Coder())
@@ -82,23 +83,25 @@ func (loader PluginLoader) registerCoders() {
 /**
  *  Message digesters
  */
-func (loader PluginLoader) registerDigesters() {
+// protected
+func (loader PluginLoader) RegisterDigesters() {
 
 	// SHA-256
 	SetSHA256Digester(NewSHA256Digester())
 
-	// RipeMD-160
-	SetRIPEMD160Digester(NewRIPEMD160Digester())
-
-	// Keccak-256
-	SetKECCAK256Digester(NewKECCAK256Digester())
+	//// RipeMD-160
+	//SetRIPEMD160Digester(NewRIPEMD160Digester())
+	//
+	//// Keccak-256
+	//SetKECCAK256Digester(NewKECCAK256Digester())
 
 }
 
 /**
  *  Symmetric key parsers
  */
-func (loader PluginLoader) registerSymmetricKeyFactories() {
+// protected
+func (loader PluginLoader) RegisterSymmetricKeyFactories() {
 
 	// AES-256
 	factory := &aesFactory{}
@@ -114,7 +117,8 @@ func (loader PluginLoader) registerSymmetricKeyFactories() {
 /**
  *  Asymmetric key parsers
  */
-func (loader PluginLoader) registerAsymmetricKeyFactories() {
+// protected
+func (loader PluginLoader) RegisterAsymmetricKeyFactories() {
 
 	// RSA
 	rsaPri := &rsaPrivateFactory{}
@@ -141,7 +145,8 @@ func (loader PluginLoader) registerAsymmetricKeyFactories() {
 /**
  *  ID, Address, Meta, Document parsers
  */
-func (loader PluginLoader) registerEntityFactories() {
+// protected
+func (loader PluginLoader) RegisterEntityFactories() {
 
 	// Address
 	SetAddressFactory(NewAddressFactory())
