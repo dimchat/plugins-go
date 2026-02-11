@@ -41,24 +41,20 @@ import (
 	. "github.com/dimchat/plugins-go/mem"
 )
 
+func NewMetaFactory(version MetaType) MetaFactory {
+	return &BaseMetaFactory{
+		Type: version,
+	}
+}
+
 /**
  *  Base Meta Factory
  */
 type BaseMetaFactory struct {
 	//MetaFactory
 
-	_type MetaType
-}
-
-func NewMetaFactory(version MetaType) MetaFactory {
-	return &BaseMetaFactory{
-		_type: version,
-	}
-}
-
-func (factory BaseMetaFactory) Init(version MetaType) MetaFactory {
-	factory._type = version
-	return factory
+	// protected
+	Type MetaType
 }
 
 // Override
@@ -86,7 +82,7 @@ func (factory BaseMetaFactory) GenerateMeta(sKey SignKey, seed string) Meta {
 
 // Override
 func (factory BaseMetaFactory) CreateMeta(key VerifyKey, seed string, fingerprint TransportableData) Meta {
-	version := factory._type
+	version := factory.Type
 	switch version {
 	case MKM:
 		return NewMetaWithType(version, key, seed, fingerprint)

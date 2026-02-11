@@ -152,7 +152,7 @@ func (loader PluginLoader) RegisterEntityFactories() {
 	SetAddressFactory(NewAddressFactory())
 
 	// ID
-	SetIDFactory(NewIdentifierFactory())
+	SetIDFactory(NewIDFactory())
 
 	// Meta
 	setMetaFactory(MKM, "mkm")

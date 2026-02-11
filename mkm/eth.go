@@ -50,18 +50,23 @@ import (
  *          address     = hex_encode(digest.suffix(20));
  */
 type ETHAddress struct {
+	//Address
 	ConstantString
-}
-
-func NewETHAddress(address string) Address {
-	eth := &ETHAddress{}
-	eth.InitWithString(address)
-	return eth
 }
 
 // Override
 func (address *ETHAddress) Network() EntityType {
 	return USER
+}
+
+//
+//  Factory methods for ETH Address
+//
+
+func NewETHAddress(address string) Address {
+	eth := &ETHAddress{}
+	eth.InitWithString(address)
+	return eth
 }
 
 /**
@@ -90,9 +95,8 @@ func GenerateETHAddress(fingerprint []byte) Address {
 func ParseETHAddress(address string) Address {
 	if isETH(address) {
 		return NewETHAddress(address)
-	} else {
-		return nil
 	}
+	return nil
 }
 
 // https://eips.ethereum.org/EIPS/eip-55

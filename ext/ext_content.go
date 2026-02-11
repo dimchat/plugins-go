@@ -39,65 +39,65 @@ import (
 func registerContentFactories() {
 
 	// Text
-	registerContentCreator(ContentType.TEXT, "text", func(dict StringKeyMap) Content {
+	registerContentCreator(ContentType.TEXT, func(dict StringKeyMap) Content {
 		content := &BaseTextContent{}
 		content.InitWithMap(dict)
 		return content
 	})
 
 	// File
-	registerContentCreator(ContentType.FILE, "file", func(dict StringKeyMap) Content {
+	registerContentCreator(ContentType.FILE, func(dict StringKeyMap) Content {
 		content := &BaseFileContent{}
 		content.InitWithMap(dict)
 		return content
 	})
 	// Image
-	registerContentCreator(ContentType.IMAGE, "image", func(dict StringKeyMap) Content {
+	registerContentCreator(ContentType.IMAGE, func(dict StringKeyMap) Content {
 		content := &ImageFileContent{}
 		content.InitWithMap(dict)
 		return content
 	})
 	// Audio
-	registerContentCreator(ContentType.AUDIO, "audio", func(dict StringKeyMap) Content {
+	registerContentCreator(ContentType.AUDIO, func(dict StringKeyMap) Content {
 		content := &AudioFileContent{}
 		content.InitWithMap(dict)
 		return content
 	})
 	// Video
-	registerContentCreator(ContentType.VIDEO, "video", func(dict StringKeyMap) Content {
+	registerContentCreator(ContentType.VIDEO, func(dict StringKeyMap) Content {
 		content := &VideoFileContent{}
 		content.InitWithMap(dict)
 		return content
 	})
 
 	// Web Page
-	registerContentCreator(ContentType.PAGE, "page", func(dict StringKeyMap) Content {
+	registerContentCreator(ContentType.PAGE, func(dict StringKeyMap) Content {
 		content := &WebPageContent{}
 		content.InitWithMap(dict)
 		return content
 	})
 
 	// Name Card
-	registerContentCreator(ContentType.NAME_CARD, "card", func(dict StringKeyMap) Content {
+	registerContentCreator(ContentType.NAME_CARD, func(dict StringKeyMap) Content {
 		content := &NameCardContent{}
 		content.InitWithMap(dict)
 		return content
 	})
 
 	// Quote
-	registerContentCreator(ContentType.QUOTE, "quote", func(dict StringKeyMap) Content {
+	registerContentCreator(ContentType.QUOTE, func(dict StringKeyMap) Content {
 		content := &BaseQuoteContent{}
 		content.InitWithMap(dict)
 		return content
 	})
 
 	// Money
-	registerContentCreator(ContentType.MONEY, "money", func(dict StringKeyMap) Content {
+	registerContentCreator(ContentType.MONEY, func(dict StringKeyMap) Content {
 		content := &BaseMoneyContent{}
 		content.InitWithMap(dict)
 		return content
 	})
-	registerContentCreator(ContentType.TRANSFER, "transfer", func(dict StringKeyMap) Content {
+	registerContentCreator(ContentType.TRANSFER, func(dict StringKeyMap) Content {
 		content := &TransferMoneyContent{}
 		content.InitWithMap(dict)
 		return content
@@ -105,34 +105,34 @@ func registerContentFactories() {
 	// ...
 
 	// Command
-	registerContentFactory(ContentType.COMMAND, "command", &GeneralCommandFactory{})
+	SetContentFactory(ContentType.COMMAND, &GeneralCommandFactory{})
 
 	// History Command
-	registerContentFactory(ContentType.HISTORY, "history", &HistoryCommandFactory{})
+	SetContentFactory(ContentType.HISTORY, &HistoryCommandFactory{})
 
 	// Content Array
-	registerContentCreator(ContentType.ARRAY, "array", func(dict StringKeyMap) Content {
+	registerContentCreator(ContentType.ARRAY, func(dict StringKeyMap) Content {
 		content := &ListContent{}
 		content.InitWithMap(dict)
 		return content
 	})
 
 	// Combine and Forward
-	registerContentCreator(ContentType.COMBINE_FORWARD, "combine", func(dict StringKeyMap) Content {
+	registerContentCreator(ContentType.COMBINE_FORWARD, func(dict StringKeyMap) Content {
 		content := &CombineForwardContent{}
 		content.InitWithMap(dict)
 		return content
 	})
 
 	// Top-Secret
-	registerContentCreator(ContentType.FORWARD, "forward", func(dict StringKeyMap) Content {
+	registerContentCreator(ContentType.FORWARD, func(dict StringKeyMap) Content {
 		content := &SecretContent{}
 		content.InitWithMap(dict)
 		return content
 	})
 
 	// unknown content type
-	registerContentCreator(ContentType.ANY, "*", func(dict StringKeyMap) Content {
+	registerContentCreator(ContentType.ANY, func(dict StringKeyMap) Content {
 		content := &BaseContent{}
 		content.InitWithMap(dict)
 		return content
@@ -146,12 +146,12 @@ func registerContentFactories() {
 func registerCustomizedFactories() {
 
 	// Application Customized Content
-	registerContentCreator(ContentType.CUSTOMIZED, "customized", func(dict StringKeyMap) Content {
+	registerContentCreator(ContentType.CUSTOMIZED, func(dict StringKeyMap) Content {
 		content := &AppCustomizedContent{}
 		content.InitWithMap(dict)
 		return content
 	})
-	//registerContentCreator(ContentType.APPLICATION, "application", func(dict StringKeyMap) Content {
+	//registerContentCreator(ContentType.APPLICATION, func(dict StringKeyMap) Content {
 	//	content := &AppCustomizedContent{}
 	//	content.InitWithMap(dict)
 	//	return content
@@ -159,13 +159,7 @@ func registerCustomizedFactories() {
 
 }
 
-func registerContentFactory(msgType, alias string, factory ContentFactory) {
-	SetContentFactory(msgType, factory)
-	SetContentFactory(alias, factory)
-}
-
-func registerContentCreator(msgType, alias string, fn FuncCreateContent) {
+func registerContentCreator(msgType string, fn FuncCreateContent) {
 	factory := NewContentFactory(fn)
 	SetContentFactory(msgType, factory)
-	SetContentFactory(alias, factory)
 }

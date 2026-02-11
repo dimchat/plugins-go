@@ -40,29 +40,25 @@ import (
 	. "github.com/dimchat/plugins-go/mem"
 )
 
+func NewDocumentFactory(docType string) DocumentFactory {
+	return &GeneralDocumentFactory{
+		Type: docType,
+	}
+}
+
 /**
  *  General Document Factory
  */
 type GeneralDocumentFactory struct {
 	//DocumentFactory
 
-	_type string
-}
-
-func NewDocumentFactory(docType string) DocumentFactory {
-	return &GeneralDocumentFactory{
-		_type: docType,
-	}
-}
-
-func (factory GeneralDocumentFactory) Init(docType string) DocumentFactory {
-	factory._type = docType
-	return factory
+	// protected
+	Type string
 }
 
 // Override
 func (factory GeneralDocumentFactory) CreateDocument(data string, signature TransportableData) Document {
-	docType := factory._type
+	docType := factory.Type
 	switch docType {
 	case VISA:
 		return NewVisaWithData(data, signature)

@@ -53,14 +53,10 @@ import (
  *          address     = base58_encode(network + digest + code);
  */
 type BTCAddress struct {
+	//Address
 	ConstantString
 
 	_network EntityType
-}
-
-func NewBTCAddress(address string, network EntityType) Address {
-	btc := &BTCAddress{}
-	return btc.Init(address, network)
 }
 
 func (addr *BTCAddress) Init(string string, network EntityType) Address {
@@ -73,6 +69,15 @@ func (addr *BTCAddress) Init(string string, network EntityType) Address {
 // Override
 func (addr *BTCAddress) Network() EntityType {
 	return addr._network
+}
+
+//
+//  Factory methods for BTC Address
+//
+
+func NewBTCAddress(address string, network EntityType) Address {
+	btc := &BTCAddress{}
+	return btc.Init(address, network)
 }
 
 /**
@@ -121,10 +126,9 @@ func ParseBTCAddress(base58 string) Address {
 	if BytesEqual(cc, suffix) {
 		network := EntityType(data[0])
 		return NewBTCAddress(base58, network)
-	} else {
-		//panic("address check code error")
-		return nil
 	}
+	//panic("address check code error")
+	return nil
 }
 
 func checkCode(data []byte) []byte {

@@ -38,19 +38,15 @@ import (
 	. "github.com/dimchat/plugins-go/mem"
 )
 
+func NewIDFactory() IDFactory {
+	return &IdentifierFactory{}
+}
+
 /**
  *  General ID Factory
  */
 type IdentifierFactory struct {
 	//IDFactory
-}
-
-func NewIdentifierFactory() IDFactory {
-	return &IdentifierFactory{}
-}
-
-func (factory IdentifierFactory) Init() IDFactory {
-	return factory
 }
 
 // Override

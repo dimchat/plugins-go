@@ -38,19 +38,15 @@ import (
 	. "github.com/dimchat/plugins-go/mem"
 )
 
+func NewAddressFactory() AddressFactory {
+	return &BaseAddressFactory{}
+}
+
 /**
  *  Base Address Factory
  */
 type BaseAddressFactory struct {
 	//AddressFactory
-}
-
-func NewAddressFactory() AddressFactory {
-	return &BaseAddressFactory{}
-}
-
-func (factory BaseAddressFactory) Init() AddressFactory {
-	return factory
 }
 
 // Override
