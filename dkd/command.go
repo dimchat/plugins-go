@@ -82,7 +82,5 @@ func (gf GeneralCommandFactory) ParseCommand(content StringKeyMap) Command {
 		// content.command should not be empty
 		return nil
 	}
-	command := &BaseCommand{}
-	command.InitWithMap(content)
-	return command
+	return NewCommandWithMap(content)
 }

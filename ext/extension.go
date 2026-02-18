@@ -37,7 +37,16 @@ import (
 	. "github.com/dimchat/plugins-go/msg"
 )
 
+type IExtensionLoader interface {
+	Load()
+}
+
 type ExtensionLoader struct {
+	//IExtensionLoader
+}
+
+func (loader ExtensionLoader) Init() IExtensionLoader {
+	return loader
 }
 
 /**

@@ -82,7 +82,5 @@ func (gf HistoryCommandFactory) ParseCommand(content StringKeyMap) Command {
 		// content.time should not be empty
 		return nil
 	}
-	command := &BaseHistoryCommand{}
-	command.InitWithMap(content)
-	return command
+	return NewHistoryCommandWithMap(content)
 }

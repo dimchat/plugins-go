@@ -76,7 +76,5 @@ func (gf GroupCommandFactory) ParseCommand(content StringKeyMap) Command {
 		// content.group should not be empty
 		return nil
 	}
-	command := &BaseGroupCommand{}
-	command.InitWithMap(content)
-	return command
+	return NewGroupCommandWithMap(content)
 }

@@ -36,7 +36,16 @@ import (
 	. "github.com/dimchat/plugins-go/mkm"
 )
 
+type IPluginLoader interface {
+	Load()
+}
+
 type PluginLoader struct {
+	//IPluginLoader
+}
+
+func (loader PluginLoader) Init() IPluginLoader {
+	return loader
 }
 
 /**
@@ -155,25 +164,24 @@ func (loader PluginLoader) RegisterEntityFactories() {
 	SetIDFactory(NewIDFactory())
 
 	// Meta
-	setMetaFactory(MKM, "mkm")
-	setMetaFactory(BTC, "btc")
-	setMetaFactory(ETH, "eth")
+	registerMetaFactory(MKM)
+	registerMetaFactory(BTC)
+	registerMetaFactory(ETH)
 
 	// Document
-	setDocumentFactory("*")
-	setDocumentFactory(VISA)
-	setDocumentFactory(PROFILE)
-	setDocumentFactory(BULLETIN)
+	registerDocumentFactory("*")
+	registerDocumentFactory(VISA)
+	registerDocumentFactory(PROFILE)
+	registerDocumentFactory(BULLETIN)
 
 }
 
-func setMetaFactory(version, alias string) {
+func registerMetaFactory(version string) {
 	factory := NewMetaFactory(version)
 	SetMetaFactory(version, factory)
-	SetMetaFactory(alias, factory)
 }
 
-func setDocumentFactory(docType string) {
+func registerDocumentFactory(docType string) {
 	factory := NewDocumentFactory(docType)
 	SetDocumentFactory(docType, factory)
 }

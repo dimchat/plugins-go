@@ -39,59 +39,41 @@ func registerCommandFactories() {
 
 	// Meta
 	registerCommandCreator(META, func(dict StringKeyMap) Command {
-		content := &BaseMetaCommand{}
-		content.InitWithMap(dict)
-		return content
+		return NewMetaCommandWithMap(dict)
 	})
 
 	// Document
 	registerCommandCreator(DOCUMENTS, func(dict StringKeyMap) Command {
-		content := &BaseDocumentCommand{}
-		content.InitWithMap(dict)
-		return content
+		return NewDocumentCommandWithMap(dict)
 	})
 
 	// Receipt
 	registerCommandCreator(RECEIPT, func(dict StringKeyMap) Command {
-		content := &BaseReceiptCommand{}
-		content.InitWithMap(dict)
-		return content
+		return NewReceiptCommandWithMap(dict)
 	})
 
 	// Group Commands
 	SetCommandFactory("group", &GroupCommandFactory{})
 
 	registerCommandCreator(INVITE, func(dict StringKeyMap) Command {
-		content := &InviteGroupCommand{}
-		content.InitWithMap(dict)
-		return content
+		return NewInviteCommandWithMap(dict)
 	})
 	// 'expel' is deprecated (use 'reset' instead)
 	registerCommandCreator(EXPEL, func(dict StringKeyMap) Command {
-		content := &ExpelGroupCommand{}
-		content.InitWithMap(dict)
-		return content
+		return NewExpelCommandWithMap(dict)
 	})
 	registerCommandCreator(JOIN, func(dict StringKeyMap) Command {
-		content := &JoinGroupCommand{}
-		content.InitWithMap(dict)
-		return content
+		return NewJoinCommandWithMap(dict)
 	})
 	registerCommandCreator(QUIT, func(dict StringKeyMap) Command {
-		content := &QuitGroupCommand{}
-		content.InitWithMap(dict)
-		return content
+		return NewQuitCommandWithMap(dict)
 	})
 	// 'query' is deprecated
 	//registerCommandCreator(QUERY, func(dict StringKeyMap) Command {
-	//	content := &QueryGroupCommand{}
-	//	content.InitWithMap(dict)
-	//	return content
+	//	return NewQueryCommandWithMap(dict)
 	//})
 	registerCommandCreator(RESET, func(dict StringKeyMap) Command {
-		content := &ResetGroupCommand{}
-		content.InitWithMap(dict)
-		return content
+		return NewResetCommandWithMap(dict)
 	})
 
 }

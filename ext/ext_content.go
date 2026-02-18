@@ -40,67 +40,47 @@ func registerContentFactories() {
 
 	// Text
 	registerContentCreator(ContentType.TEXT, func(dict StringKeyMap) Content {
-		content := &BaseTextContent{}
-		content.InitWithMap(dict)
-		return content
+		return NewTextContentWithMap(dict)
 	})
 
 	// File
 	registerContentCreator(ContentType.FILE, func(dict StringKeyMap) Content {
-		content := &BaseFileContent{}
-		content.InitWithMap(dict)
-		return content
+		return NewFileContentWithMap(dict)
 	})
 	// Image
 	registerContentCreator(ContentType.IMAGE, func(dict StringKeyMap) Content {
-		content := &ImageFileContent{}
-		content.InitWithMap(dict)
-		return content
+		return NewImageContentWithMap(dict)
 	})
 	// Audio
 	registerContentCreator(ContentType.AUDIO, func(dict StringKeyMap) Content {
-		content := &AudioFileContent{}
-		content.InitWithMap(dict)
-		return content
+		return NewAudioContentWithMap(dict)
 	})
 	// Video
 	registerContentCreator(ContentType.VIDEO, func(dict StringKeyMap) Content {
-		content := &VideoFileContent{}
-		content.InitWithMap(dict)
-		return content
+		return NewVideoContentWithMap(dict)
 	})
 
 	// Web Page
 	registerContentCreator(ContentType.PAGE, func(dict StringKeyMap) Content {
-		content := &WebPageContent{}
-		content.InitWithMap(dict)
-		return content
+		return NewPageContentWithMap(dict)
 	})
 
 	// Name Card
 	registerContentCreator(ContentType.NAME_CARD, func(dict StringKeyMap) Content {
-		content := &NameCardContent{}
-		content.InitWithMap(dict)
-		return content
+		return NewNameCardWithMap(dict)
 	})
 
 	// Quote
 	registerContentCreator(ContentType.QUOTE, func(dict StringKeyMap) Content {
-		content := &BaseQuoteContent{}
-		content.InitWithMap(dict)
-		return content
+		return NewQuoteContentWithMap(dict)
 	})
 
 	// Money
 	registerContentCreator(ContentType.MONEY, func(dict StringKeyMap) Content {
-		content := &BaseMoneyContent{}
-		content.InitWithMap(dict)
-		return content
+		return NewMoneyContentWithMap(dict)
 	})
 	registerContentCreator(ContentType.TRANSFER, func(dict StringKeyMap) Content {
-		content := &TransferMoneyContent{}
-		content.InitWithMap(dict)
-		return content
+		return NewTransferContentWithMap(dict)
 	})
 	// ...
 
@@ -112,30 +92,22 @@ func registerContentFactories() {
 
 	// Content Array
 	registerContentCreator(ContentType.ARRAY, func(dict StringKeyMap) Content {
-		content := &ListContent{}
-		content.InitWithMap(dict)
-		return content
+		return NewArrayContentWithMap(dict)
 	})
 
 	// Combine and Forward
 	registerContentCreator(ContentType.COMBINE_FORWARD, func(dict StringKeyMap) Content {
-		content := &CombineForwardContent{}
-		content.InitWithMap(dict)
-		return content
+		return NewCombineContentWithMap(dict)
 	})
 
 	// Top-Secret
 	registerContentCreator(ContentType.FORWARD, func(dict StringKeyMap) Content {
-		content := &SecretContent{}
-		content.InitWithMap(dict)
-		return content
+		return NewForwardContentWithMap(dict)
 	})
 
 	// unknown content type
 	registerContentCreator(ContentType.ANY, func(dict StringKeyMap) Content {
-		content := &BaseContent{}
-		content.InitWithMap(dict)
-		return content
+		return NewContentWithMap(dict)
 	})
 
 }
@@ -147,14 +119,10 @@ func registerCustomizedFactories() {
 
 	// Application Customized Content
 	registerContentCreator(ContentType.CUSTOMIZED, func(dict StringKeyMap) Content {
-		content := &AppCustomizedContent{}
-		content.InitWithMap(dict)
-		return content
+		return NewCustomizedContentWithMap(dict)
 	})
 	//registerContentCreator(ContentType.APPLICATION, func(dict StringKeyMap) Content {
-	//	content := &AppCustomizedContent{}
-	//	content.InitWithMap(dict)
-	//	return content
+	//	return NewCustomizedContentWithMap(dict)
 	//})
 
 }
