@@ -39,6 +39,7 @@ import (
 
 // generate key
 func NewAESKey() SymmetricKey {
+	// random key
 	pwd := RandomBytes(256 / 8) // 32
 	ted := NewBase64DataWithBytes(pwd)
 	// build key info
@@ -47,17 +48,21 @@ func NewAESKey() SymmetricKey {
 	info["data"] = ted.Serialize()
 	//info["mode"] = "CBC"
 	//info["padding"] = "PKCS7"
-
-	key := &AESKey{}
-	if key.InitWithMap(info) != nil {
-		key._data = ted
+	return &AESKey{
+		Dictionary: NewDictionary(info),
+		data:       ted,
 	}
-	return key
 }
 
 func NewAESKeyWithMap(dict StringKeyMap) SymmetricKey {
-	key := &AESKey{}
-	return key.InitWithMap(dict)
+	// TODO: check algorithm parameters
+	// 1. check mode = 'CBC'
+	// 2. check padding = 'PKCS7Padding'
+	return &AESKey{
+		Dictionary: NewDictionary(dict),
+		// lazy load
+		data: nil,
+	}
 }
 
 /**
@@ -73,21 +78,9 @@ func NewAESKeyWithMap(dict StringKeyMap) SymmetricKey {
  */
 type AESKey struct {
 	//SymmetricKey
-	BaseKey
+	*Dictionary
 
-	_data TransportableData
-}
-
-func (key *AESKey) InitWithMap(dict StringKeyMap) SymmetricKey {
-	if key.BaseKey.InitWithMap(dict) != nil {
-		// TODO: check algorithm parameters
-		// 1. check mode = 'CBC'
-		// 2. check padding = 'PKCS7Padding'
-
-		// lazy load
-		key._data = nil
-	}
-	return key
+	data TransportableData
 }
 
 // protected
@@ -110,12 +103,18 @@ func (key *AESKey) Equal(other interface{}) bool {
 //-------- ICryptographyKey
 
 // Override
+func (key *AESKey) Algorithm() string {
+	info := key.Map()
+	return GetKeyAlgorithm(info)
+}
+
+// Override
 func (key *AESKey) Data() TransportableData {
-	ted := key._data
+	ted := key.data
 	if ted == nil {
 		base64 := key.Get("data")
 		ted = ParseTransportableData(base64)
-		key._data = ted
+		key.data = ted
 	}
 	return ted
 }

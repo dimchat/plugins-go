@@ -45,9 +45,13 @@ type IRSAPublicKey interface {
 	EncryptKey
 }
 
-func NewRSAPublicKeyWithMap(dict StringKeyMap) IRSAPublicKey {
-	key := &RSAPublicKey{}
-	return key.InitWithMap(dict)
+func NewRSAPublicKeyWithMap(dict StringKeyMap) *RSAPublicKey {
+	return &RSAPublicKey{
+		Dictionary: NewDictionary(dict),
+		// lazy load
+		rsaPublicKey: nil,
+		data:         nil,
+	}
 }
 
 /**
@@ -61,33 +65,25 @@ func NewRSAPublicKeyWithMap(dict StringKeyMap) IRSAPublicKey {
  *  </pre></blockquote>
  */
 type RSAPublicKey struct {
-	BaseKey
+	//PublicKey, EncryptKey
+	*Dictionary
 
-	_rsaPublicKey *rsa.PublicKey
+	rsaPublicKey *rsa.PublicKey
 
-	_data TransportableData
-}
-
-func (key *RSAPublicKey) InitWithMap(dict StringKeyMap) IRSAPublicKey {
-	if key.BaseKey.InitWithMap(dict) != nil {
-		// lazy load
-		key._rsaPublicKey = nil
-		key._data = nil
-	}
-	return key
+	data TransportableData
 }
 
 func (key *RSAPublicKey) getPublicKey() *rsa.PublicKey {
-	if key._rsaPublicKey == nil {
+	if key.rsaPublicKey == nil {
 		text := key.GetString("data", "")
 		block, _ := pem.Decode(UTF8Encode(text))
 		pub, err := x509.ParsePKIXPublicKey(block.Bytes)
 		if err != nil {
 			panic(err)
 		}
-		key._rsaPublicKey = pub.(*rsa.PublicKey)
+		key.rsaPublicKey, _ = pub.(*rsa.PublicKey)
 	}
-	return key._rsaPublicKey
+	return key.rsaPublicKey
 }
 
 func (key *RSAPublicKey) getHash() crypto.Hash {
@@ -97,14 +93,20 @@ func (key *RSAPublicKey) getHash() crypto.Hash {
 //-------- ICryptographyKey
 
 // Override
+func (key *RSAPublicKey) Algorithm() string {
+	info := key.Map()
+	return GetKeyAlgorithm(info)
+}
+
+// Override
 func (key *RSAPublicKey) Data() TransportableData {
-	ted := key._data
+	ted := key.data
 	if ted == nil {
 		// TODO: encode public key data to PKCS1
 		pub := key.getPublicKey()
 		bin := pub.N.Bytes()
 		ted = NewPlainDataWithBytes(bin)
-		key._data = ted
+		key.data = ted
 	}
 	return ted
 }

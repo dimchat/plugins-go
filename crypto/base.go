@@ -38,25 +38,8 @@ import (
 	. "github.com/dimchat/mkm-go/types"
 )
 
-type BaseKey struct {
-	//CryptographyKey
-	Dictionary
-}
-
-//func (key *BaseKey) Init(dict StringKeyMap) CryptographyKey {
-//	if key.Dictionary.Init(dict) != nil {
-//	}
-//	return key
-//}
-
-// Override
-func (key *BaseKey) Algorithm() string {
-	info := key.Map()
-	return GetKeyAlgorithm(info)
-}
-
 //
-//  Conveniences
+//  Cryptography
 //
 
 func GetKeyAlgorithm(key StringKeyMap) string {

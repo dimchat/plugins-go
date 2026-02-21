@@ -37,6 +37,7 @@ import (
 
 // generate key
 func NewECCPrivateKey() PrivateKey {
+	// generate key
 	_, pri := secp256k1.Generate()
 	ted := NewPlainDataWithBytes(pri)
 	txt := HexEncode(pri)
@@ -46,17 +47,20 @@ func NewECCPrivateKey() PrivateKey {
 	info["data"] = txt
 	info["curve"] = "SECP256k1"
 	info["digest"] = "SHA256"
-
-	key := &ECCPrivateKey{}
-	if key.InitWithMap(info) != nil {
-		key._data = ted
+	return &ECCPrivateKey{
+		Dictionary: NewDictionary(info),
+		data:       ted,
+		publicKey:  nil,
 	}
-	return key
 }
 
 func NewECCPrivateKeyWithMap(dict StringKeyMap) PrivateKey {
-	key := &ECCPrivateKey{}
-	return key.InitWithMap(dict)
+	return &ECCPrivateKey{
+		Dictionary: NewDictionary(dict),
+		// lazy load
+		data:      nil,
+		publicKey: nil,
+	}
 }
 
 /**
@@ -71,20 +75,12 @@ func NewECCPrivateKeyWithMap(dict StringKeyMap) PrivateKey {
  *  </pre></blockquote>
  */
 type ECCPrivateKey struct {
-	BaseKey
+	//PrivateKey
+	*Dictionary
 
-	_data TransportableData
+	data TransportableData
 
-	_publicKey PublicKey
-}
-
-func (key *ECCPrivateKey) InitWithMap(dict StringKeyMap) PrivateKey {
-	if key.BaseKey.InitWithMap(dict) != nil {
-		// lazy load
-		key._data = nil
-		key._publicKey = nil
-	}
-	return key
+	publicKey PublicKey
 }
 
 // Override
@@ -95,8 +91,14 @@ func (key *ECCPrivateKey) Equal(other interface{}) bool {
 //-------- ICryptographyKey
 
 // Override
+func (key *ECCPrivateKey) Algorithm() string {
+	info := key.Map()
+	return GetKeyAlgorithm(info)
+}
+
+// Override
 func (key *ECCPrivateKey) Data() TransportableData {
-	ted := key._data
+	ted := key.data
 	if ted == nil {
 		text := key.GetString("data", "")
 		size := len(text)
@@ -108,7 +110,7 @@ func (key *ECCPrivateKey) Data() TransportableData {
 		} else {
 			// TODO: PEM format?
 		}
-		key._data = ted
+		key.data = ted
 	}
 	return ted
 }
@@ -124,7 +126,8 @@ func (key *ECCPrivateKey) Sign(data []byte) []byte {
 
 // Override
 func (key *ECCPrivateKey) PublicKey() PublicKey {
-	if key._publicKey == nil {
+	publicKey := key.publicKey
+	if publicKey == nil {
 		ted := key.Data()
 		pri := ted.Bytes()
 		pub := secp256k1.GetPublicKey(pri)
@@ -135,9 +138,8 @@ func (key *ECCPrivateKey) PublicKey() PublicKey {
 		info["data"] = txt
 		info["curve"] = "SECP256k1"
 		info["digest"] = "SHA256"
-
-		newKey := &ECCPublicKey{}
-		key._publicKey = newKey.InitWithMap(info)
+		publicKey = NewECCPublicKeyWithMap(info)
+		key.publicKey = publicKey
 	}
-	return key._publicKey
+	return publicKey
 }

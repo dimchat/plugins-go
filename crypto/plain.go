@@ -34,13 +34,19 @@ import (
 )
 
 func NewPlainKey() SymmetricKey {
-	key := &PlainKey{}
-	return key.Init()
+	dict := NewMap()
+	dict["algorithm"] = PLAIN
+	return &PlainKey{
+		Dictionary: NewDictionary(dict),
+		data:       ZeroPlainData(),
+	}
 }
 
 func NewPlainKeyWithMap(dict StringKeyMap) SymmetricKey {
-	key := &PlainKey{}
-	return key.InitWithMap(dict)
+	return &PlainKey{
+		Dictionary: NewDictionary(dict),
+		data:       ZeroPlainData(),
+	}
 }
 
 /**
@@ -49,24 +55,9 @@ func NewPlainKeyWithMap(dict StringKeyMap) SymmetricKey {
  */
 type PlainKey struct {
 	//SymmetricKey
-	BaseKey
+	*Dictionary
 
-	_data TransportableData
-}
-
-func (key *PlainKey) Init() SymmetricKey {
-	if key.BaseKey.Init() != nil {
-		key.Set("algorithm", PLAIN)
-		key._data = ZeroPlainData()
-	}
-	return key
-}
-
-func (key *PlainKey) InitWithMap(dict StringKeyMap) SymmetricKey {
-	if key.BaseKey.InitWithMap(dict) != nil {
-		key._data = ZeroPlainData()
-	}
-	return key
+	data TransportableData
 }
 
 // Override
@@ -77,8 +68,14 @@ func (key *PlainKey) Equal(other interface{}) bool {
 //-------- ICryptographyKey
 
 // Override
+func (key *PlainKey) Algorithm() string {
+	info := key.Map()
+	return GetKeyAlgorithm(info)
+}
+
+// Override
 func (key *PlainKey) Data() TransportableData {
-	return key._data
+	return key.data
 }
 
 //-------- ISymmetricKey

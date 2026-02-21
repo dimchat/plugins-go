@@ -66,17 +66,22 @@ func NewRSAPrivateKey() IRSAPrivateKey {
 	info["mode"] = "ECB"
 	info["padding"] = "PKCS1"
 	info["digest"] = "SHA256"
-
-	key := &RSAPrivateKey{}
-	if key.InitWithMap(info) != nil {
-		key._rsaPrivateKey = pri
+	return &RSAPrivateKey{
+		Dictionary:    NewDictionary(info),
+		rsaPrivateKey: pri,
+		data:          nil, // lazy load
+		publicKey:     nil, // lazy load
 	}
-	return key
 }
 
 func NewRSAPrivateKeyWithMap(dict StringKeyMap) IRSAPrivateKey {
-	key := &RSAPrivateKey{}
-	return key.InitWithMap(dict)
+	return &RSAPrivateKey{
+		Dictionary: NewDictionary(dict),
+		// lazy load
+		rsaPrivateKey: nil,
+		data:          nil,
+		publicKey:     nil,
+	}
 }
 
 /**
@@ -88,23 +93,14 @@ func NewRSAPrivateKeyWithMap(dict StringKeyMap) IRSAPrivateKey {
  *      }
  */
 type RSAPrivateKey struct {
-	BaseKey
+	//IRSAPrivateKey
+	*Dictionary
 
-	_rsaPrivateKey *rsa.PrivateKey
+	rsaPrivateKey *rsa.PrivateKey
 
-	_data TransportableData
+	data TransportableData
 
-	_publicKey PublicKey
-}
-
-func (key *RSAPrivateKey) InitWithMap(dict StringKeyMap) IRSAPrivateKey {
-	if key.BaseKey.InitWithMap(dict) != nil {
-		// lazy load
-		key._rsaPrivateKey = nil
-		key._data = nil
-		key._publicKey = nil
-	}
-	return key
+	publicKey PublicKey
 }
 
 // Override
@@ -113,7 +109,7 @@ func (key *RSAPrivateKey) Equal(other interface{}) bool {
 }
 
 func (key *RSAPrivateKey) getPrivateKey() *rsa.PrivateKey {
-	if key._rsaPrivateKey == nil {
+	if key.rsaPrivateKey == nil {
 		text := key.GetString("data", "")
 		size := len(text)
 		if size == 0 {
@@ -129,9 +125,9 @@ func (key *RSAPrivateKey) getPrivateKey() *rsa.PrivateKey {
 			}
 			pri, _ = pkcs8.(*rsa.PrivateKey)
 		}
-		key._rsaPrivateKey = pri
+		key.rsaPrivateKey = pri
 	}
-	return key._rsaPrivateKey
+	return key.rsaPrivateKey
 }
 
 func (key *RSAPrivateKey) getHash() crypto.Hash {
@@ -141,14 +137,20 @@ func (key *RSAPrivateKey) getHash() crypto.Hash {
 //-------- ICryptographyKey
 
 // Override
+func (key *RSAPrivateKey) Algorithm() string {
+	info := key.Map()
+	return GetKeyAlgorithm(info)
+}
+
+// Override
 func (key *RSAPrivateKey) Data() TransportableData {
-	ted := key._data
+	ted := key.data
 	if ted == nil {
 		// TODO: encode private key data to PKCS1
 		pri := key.getPrivateKey()
 		bin := pri.D.Bytes()
 		ted := NewPlainDataWithBytes(bin)
-		key._data = ted
+		key.data = ted
 	}
 	return ted
 }
@@ -170,7 +172,7 @@ func (key *RSAPrivateKey) Sign(data []byte) []byte {
 
 // Override
 func (key *RSAPrivateKey) PublicKey() PublicKey {
-	if key._publicKey == nil {
+	if key.publicKey == nil {
 		sKey := key.getPrivateKey()
 		pKey := &sKey.PublicKey
 		der, err := x509.MarshalPKIXPublicKey(pKey)
@@ -190,14 +192,11 @@ func (key *RSAPrivateKey) PublicKey() PublicKey {
 		info["mode"] = "ECB"
 		info["padding"] = "PKCS1"
 		info["digest"] = "SHA256"
-
-		newKey := &RSAPublicKey{}
-		if newKey.InitWithMap(info) != nil {
-			newKey._rsaPublicKey = pKey
-		}
-		key._publicKey = newKey
+		newKey := NewRSAPublicKeyWithMap(info)
+		newKey.rsaPublicKey = pKey
+		key.publicKey = newKey
 	}
-	return key._publicKey
+	return key.publicKey
 }
 
 //-------- IDecryptKey

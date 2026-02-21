@@ -35,8 +35,11 @@ import (
 )
 
 func NewECCPublicKeyWithMap(dict StringKeyMap) PublicKey {
-	key := &ECCPublicKey{}
-	return key.InitWithMap(dict)
+	return &ECCPublicKey{
+		Dictionary: NewDictionary(dict),
+		// lazy load
+		data: nil,
+	}
 }
 
 /**
@@ -52,24 +55,22 @@ func NewECCPublicKeyWithMap(dict StringKeyMap) PublicKey {
  */
 type ECCPublicKey struct {
 	//PublicKey
-	BaseKey
+	*Dictionary
 
-	_data TransportableData
-}
-
-func (key *ECCPublicKey) InitWithMap(dict StringKeyMap) PublicKey {
-	if key.BaseKey.InitWithMap(dict) != nil {
-		// lazy load
-		key._data = nil
-	}
-	return key
+	data TransportableData
 }
 
 //-------- ICryptographyKey
 
 // Override
+func (key *ECCPublicKey) Algorithm() string {
+	info := key.Map()
+	return GetKeyAlgorithm(info)
+}
+
+// Override
 func (key *ECCPublicKey) Data() TransportableData {
-	ted := key._data
+	ted := key.data
 	if ted == nil {
 		text := key.GetString("data", "")
 		// check for raw data (33/65 bytes)
@@ -81,7 +82,7 @@ func (key *ECCPublicKey) Data() TransportableData {
 		} else {
 			// TODO: PEM format?
 		}
-		key._data = ted
+		key.data = ted
 	}
 	return ted
 }
