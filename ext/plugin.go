@@ -44,10 +44,6 @@ type PluginLoader struct {
 	//IPluginLoader
 }
 
-func (loader PluginLoader) Init() IPluginLoader {
-	return loader
-}
-
 /**
  *  Register plugins
  */
@@ -158,10 +154,10 @@ func (loader PluginLoader) RegisterAsymmetricKeyFactories() {
 func (loader PluginLoader) RegisterEntityFactories() {
 
 	// Address
-	SetAddressFactory(NewAddressFactory())
+	SetAddressFactory(&BaseAddressFactory{})
 
 	// ID
-	SetIDFactory(NewIDFactory())
+	SetIDFactory(&IdentifierFactory{})
 
 	// Meta
 	registerMetaFactory(MKM)
@@ -177,11 +173,15 @@ func (loader PluginLoader) RegisterEntityFactories() {
 }
 
 func registerMetaFactory(version string) {
-	factory := NewMetaFactory(version)
+	factory := &BaseMetaFactory{
+		Type: version,
+	}
 	SetMetaFactory(version, factory)
 }
 
 func registerDocumentFactory(docType string) {
-	factory := NewDocumentFactory(docType)
+	factory := &GeneralDocumentFactory{
+		Type: docType,
+	}
 	SetDocumentFactory(docType, factory)
 }

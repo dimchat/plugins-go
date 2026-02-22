@@ -56,28 +56,19 @@ type BTCAddress struct {
 	//Address
 	ConstantString
 
-	_network EntityType
+	network EntityType
 }
 
-func (addr *BTCAddress) Init(string string, network EntityType) Address {
-	if addr.ConstantString.InitWithString(string) != nil {
-		addr._network = network
+func NewBTCAddress(address string, network EntityType) *BTCAddress {
+	return &BTCAddress{
+		ConstantString: *NewConstantString(address),
+		network:        network,
 	}
-	return addr
 }
 
 // Override
-func (addr *BTCAddress) Network() EntityType {
-	return addr._network
-}
-
-//
-//  Factory methods for BTC Address
-//
-
-func NewBTCAddress(address string, network EntityType) Address {
-	btc := &BTCAddress{}
-	return btc.Init(address, network)
+func (address BTCAddress) Network() EntityType {
+	return address.network
 }
 
 /**

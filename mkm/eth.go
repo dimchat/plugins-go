@@ -54,19 +54,15 @@ type ETHAddress struct {
 	ConstantString
 }
 
-// Override
-func (address *ETHAddress) Network() EntityType {
-	return USER
+func NewETHAddress(address string) *ETHAddress {
+	return &ETHAddress{
+		ConstantString: *NewConstantString(address),
+	}
 }
 
-//
-//  Factory methods for ETH Address
-//
-
-func NewETHAddress(address string) Address {
-	eth := &ETHAddress{}
-	eth.InitWithString(address)
-	return eth
+// Override
+func (address ETHAddress) Network() EntityType {
+	return USER
 }
 
 /**

@@ -38,10 +38,6 @@ import (
 	. "github.com/dimchat/plugins-go/mem"
 )
 
-func NewAddressFactory() AddressFactory {
-	return &BaseAddressFactory{}
-}
-
 /**
  *  Base Address Factory
  */

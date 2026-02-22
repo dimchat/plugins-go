@@ -31,35 +31,30 @@ package mem
 type ThanosCache[K comparable, V any] struct {
 	//MemoryCache
 
-	_table map[K]V
+	table map[K]V
 }
 
 func NewThanosCache[K comparable, V any]() *ThanosCache[K, V] {
 	return &ThanosCache[K, V]{
-		_table: make(map[K]V, 512),
+		table: make(map[K]V, 512),
 	}
-}
-
-func (cache *ThanosCache[K, V]) Init() MemoryCache[K, V] {
-	cache._table = make(map[K]V, 512)
-	return cache
 }
 
 // Override
 func (cache *ThanosCache[K, V]) Get(key K) V {
-	value, _ := cache._table[key]
+	value, _ := cache.table[key]
 	return value
 }
 
 // Override
 func (cache *ThanosCache[K, V]) Put(key K, value V) {
-	cache._table[key] = value
+	cache.table[key] = value
 }
 
 // Override
 func (cache *ThanosCache[K, V]) ReduceMemory() int {
 	finger := 0
-	finger = thanos(cache._table, finger)
+	finger = thanos(cache.table, finger)
 	return finger >> 1
 }
 

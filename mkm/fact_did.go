@@ -38,10 +38,6 @@ import (
 	. "github.com/dimchat/plugins-go/mem"
 )
 
-func NewIDFactory() IDFactory {
-	return &IdentifierFactory{}
-}
-
 /**
  *  General ID Factory
  */
@@ -80,9 +76,8 @@ func (factory IdentifierFactory) ParseID(str string) ID {
 	return did
 }
 
-func (factory IdentifierFactory) newID(str string, name string, address Address, terminal string) ID {
-	did := &Identifier{}
-	return did.Init(str, name, address, terminal)
+func (factory IdentifierFactory) newID(s string, name string, address Address, terminal string) ID {
+	return NewIdentifier(s, name, address, terminal)
 }
 
 // protected

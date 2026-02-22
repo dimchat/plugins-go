@@ -51,35 +51,30 @@ import (
  *      address = base58_encode(network + hash + code);
  */
 type DefaultMeta struct {
-	BaseMeta
+	*BaseMeta
 
 	// caches
-	_addresses map[EntityType]Address
+	addresses map[EntityType]Address
 }
 
-func (meta *DefaultMeta) InitWithMap(dict StringKeyMap) Meta {
-	if meta.BaseMeta.InitWithMap(dict) != nil {
-		meta._addresses = make(map[EntityType]Address)
+func NewDefaultMeta(dict StringKeyMap,
+	version MetaType, key VerifyKey, seed string, fingerprint TransportableData,
+) *DefaultMeta {
+	return &DefaultMeta{
+		BaseMeta:  NewBaseMeta(dict, version, key, seed, fingerprint),
+		addresses: make(map[EntityType]Address, 1),
 	}
-	return meta
-}
-
-func (meta *DefaultMeta) InitWithType(version MetaType, key VerifyKey, seed string, fingerprint TransportableData) Meta {
-	if meta.BaseMeta.InitWithType(version, key, seed, fingerprint) != nil {
-		meta._addresses = make(map[EntityType]Address)
-	}
-	return meta
 }
 
 // Override
 func (meta *DefaultMeta) GenerateAddress(network EntityType) Address {
 	// check caches
-	address := meta._addresses[network]
+	address := meta.addresses[network]
 	if address == nil {
 		// generate and cache it
 		fingerprint := meta.Fingerprint()
 		address = GenerateBTCAddress(fingerprint.Bytes(), network)
-		meta._addresses[network] = address
+		meta.addresses[network] = address
 	}
 	return address
 }
@@ -97,37 +92,32 @@ func (meta *DefaultMeta) GenerateAddress(network EntityType) Address {
  *      address = base58_encode(network + hash + code);
  */
 type BTCMeta struct {
-	BaseMeta
+	*BaseMeta
 
 	// caches
-	_addresses map[EntityType]Address
+	addresses map[EntityType]Address
 }
 
-func (meta *BTCMeta) InitWithMap(dict StringKeyMap) Meta {
-	if meta.BaseMeta.InitWithMap(dict) != nil {
-		meta._addresses = make(map[EntityType]Address)
+func NewBTCMeta(dict StringKeyMap,
+	version MetaType, key VerifyKey, seed string, fingerprint TransportableData,
+) *BTCMeta {
+	return &BTCMeta{
+		BaseMeta:  NewBaseMeta(dict, version, key, seed, fingerprint),
+		addresses: make(map[EntityType]Address, 1),
 	}
-	return meta
-}
-
-func (meta *BTCMeta) InitWithType(version MetaType, key VerifyKey, seed string, fingerprint TransportableData) Meta {
-	if meta.BaseMeta.InitWithType(version, key, seed, fingerprint) != nil {
-		meta._addresses = make(map[EntityType]Address)
-	}
-	return meta
 }
 
 // Override
 func (meta *BTCMeta) GenerateAddress(network EntityType) Address {
 	// check caches
-	address := meta._addresses[network]
+	address := meta.addresses[network]
 	if address == nil {
 		// TODO: compress public key?
 		key := meta.PublicKey()
 		ted := key.Data()
 		// generate and cache it
 		address = GenerateBTCAddress(ted.Bytes(), network)
-		meta._addresses[network] = address
+		meta.addresses[network] = address
 	}
 	return address
 }
@@ -145,70 +135,31 @@ func (meta *BTCMeta) GenerateAddress(network EntityType) Address {
  *      address = hex_encode(digest.suffix(20));
  */
 type ETHMeta struct {
-	BaseMeta
+	*BaseMeta
 
 	// cached
-	_address Address
+	address Address
 }
 
-func (meta *ETHMeta) InitWithMap(dict StringKeyMap) Meta {
-	if meta.BaseMeta.InitWithMap(dict) != nil {
-		meta._address = nil
+func NewETHMeta(dict StringKeyMap,
+	version MetaType, key VerifyKey, seed string, fingerprint TransportableData,
+) *ETHMeta {
+	return &ETHMeta{
+		BaseMeta: NewBaseMeta(dict, version, key, seed, fingerprint),
+		address:  nil,
 	}
-	return meta
-}
-
-func (meta *ETHMeta) InitWithType(version MetaType, key VerifyKey, seed string, fingerprint TransportableData) Meta {
-	if meta.BaseMeta.InitWithType(version, key, seed, fingerprint) != nil {
-		meta._address = nil
-	}
-	return meta
 }
 
 // Override
 func (meta *ETHMeta) GenerateAddress(_ EntityType) Address {
 	// check caches
-	address := meta._address
+	address := meta.address
 	if address == nil {
 		// generate and cache it
 		key := meta.PublicKey()
 		ted := key.Data()
 		address = GenerateETHAddress(ted.Bytes())
-		meta._address = address
+		meta.address = address
 	}
 	return address
-}
-
-//
-//  Factory methods for Meta
-//
-
-func NewMetaWithType(version MetaType, key VerifyKey, seed string, fingerprint TransportableData) Meta {
-	meta := &DefaultMeta{}
-	return meta.InitWithType(version, key, seed, fingerprint)
-}
-
-func NewMetaWithMap(dict StringKeyMap) Meta {
-	meta := &DefaultMeta{}
-	return meta.InitWithMap(dict)
-}
-
-func NewBTCMetaWithType(version MetaType, key VerifyKey, seed string, fingerprint TransportableData) Meta {
-	meta := &BTCMeta{}
-	return meta.InitWithType(version, key, seed, fingerprint)
-}
-
-func NewBTCMetaWithMap(dict StringKeyMap) Meta {
-	meta := &BTCMeta{}
-	return meta.InitWithMap(dict)
-}
-
-func NewETHMetaWithType(version MetaType, key VerifyKey, seed string, fingerprint TransportableData) Meta {
-	meta := &ETHMeta{}
-	return meta.InitWithType(version, key, seed, fingerprint)
-}
-
-func NewETHMetaWithMap(dict StringKeyMap) Meta {
-	meta := &ETHMeta{}
-	return meta.InitWithMap(dict)
 }

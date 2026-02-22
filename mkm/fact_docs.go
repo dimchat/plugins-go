@@ -40,12 +40,6 @@ import (
 	. "github.com/dimchat/plugins-go/mem"
 )
 
-func NewDocumentFactory(docType string) DocumentFactory {
-	return &GeneralDocumentFactory{
-		Type: docType,
-	}
-}
-
 /**
  *  General Document Factory
  */
@@ -61,11 +55,11 @@ func (factory GeneralDocumentFactory) CreateDocument(data string, signature Tran
 	docType := factory.Type
 	switch docType {
 	case VISA:
-		return NewVisaWithData(data, signature)
+		return NewBaseVisa(nil, data, signature)
 	case BULLETIN:
-		return NewBulletinWithData(data, signature)
+		return NewBaseBulletin(nil, data, signature)
 	default:
-		return NewDocumentWithType(docType, data, signature)
+		return NewBaseDocument(nil, docType, data, signature)
 	}
 }
 
@@ -86,60 +80,10 @@ func (factory GeneralDocumentFactory) ParseDocument(info StringKeyMap) Document 
 	docType := helper.GetDocumentType(info, "")
 	switch docType {
 	case VISA:
-		return NewVisaWithMap(info)
+		return NewBaseVisa(info, "", nil)
 	case BULLETIN:
-		return NewBulletinWithMap(info)
+		return NewBaseBulletin(info, "", nil)
 	default:
-		return NewDocumentWithMap(info)
+		return NewBaseDocument(info, "", "", nil)
 	}
-}
-
-//
-//  Factory methods for Document
-//
-
-func NewDocumentWithType(docType string, data string, signature TransportableData) Document {
-	doc := &BaseDocument{}
-	if data != "" && signature != nil {
-		return doc.InitWithType(docType, data, signature)
-	} else if data != "" || signature != nil {
-		panic("document info error")
-	}
-	return doc.Init(docType)
-}
-
-func NewDocumentWithMap(dict StringKeyMap) Document {
-	doc := &BaseDocument{}
-	return doc.InitWithMap(dict)
-}
-
-func NewVisaWithData(data string, signature TransportableData) Visa {
-	doc := &BaseVisa{}
-	if data != "" && signature != nil {
-		return doc.InitWithData(data, signature)
-	} else if data != "" || signature != nil {
-		panic("visa info error")
-	}
-	return doc.Init()
-}
-
-func NewVisaWithMap(dict StringKeyMap) Visa {
-	doc := &BaseVisa{}
-	return doc.InitWithMap(dict)
-}
-
-func NewBulletinWithData(data string, signature TransportableData) Bulletin {
-	doc := &BaseBulletin{}
-	if data != "" && signature != nil {
-		return doc.InitWithData(data, signature)
-	} else if data != "" || signature != nil {
-		panic("bulletin info error")
-	}
-	return doc.Init()
-}
-
-func NewBulletinWithMap(dict StringKeyMap) Bulletin {
-	doc := &BaseBulletin{}
-	doc.InitWithMap(dict)
-	return doc
 }

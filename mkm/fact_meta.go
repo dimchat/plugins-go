@@ -41,12 +41,6 @@ import (
 	. "github.com/dimchat/plugins-go/mem"
 )
 
-func NewMetaFactory(version MetaType) MetaFactory {
-	return &BaseMetaFactory{
-		Type: version,
-	}
-}
-
 /**
  *  Base Meta Factory
  */
@@ -85,11 +79,11 @@ func (factory BaseMetaFactory) CreateMeta(key VerifyKey, seed string, fingerprin
 	version := factory.Type
 	switch version {
 	case MKM:
-		return NewMetaWithType(version, key, seed, fingerprint)
+		return NewDefaultMeta(nil, version, key, seed, fingerprint)
 	case BTC:
-		return NewBTCMetaWithType(version, key, seed, fingerprint)
+		return NewBTCMeta(nil, version, key, seed, fingerprint)
 	case ETH:
-		return NewETHMetaWithType(version, key, seed, fingerprint)
+		return NewETHMeta(nil, version, key, seed, fingerprint)
 	default:
 		return nil
 	}
@@ -117,13 +111,13 @@ func (factory BaseMetaFactory) ParseMeta(info StringKeyMap) Meta {
 	version := helper.GetMetaType(info, "")
 	switch version {
 	case MKM:
-		out = NewMetaWithMap(info)
+		out = NewDefaultMeta(info, "", nil, "", nil)
 		break
 	case BTC:
-		out = NewBTCMetaWithMap(info)
+		out = NewBTCMeta(info, "", nil, "", nil)
 		break
 	case ETH:
-		out = NewETHMetaWithMap(info)
+		out = NewETHMeta(info, "", nil, "", nil)
 		break
 	default:
 		break
