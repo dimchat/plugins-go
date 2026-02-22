@@ -41,11 +41,6 @@ type IMessageGeneralFactory interface {
 	ReliableMessageHelper
 }
 
-func NewMessageGeneralFactory() IMessageGeneralFactory {
-	gf := &MessageGeneralFactory{}
-	return gf.Init()
-}
-
 /**
  *  Message GeneralFactory
  */
@@ -59,13 +54,14 @@ type MessageGeneralFactory struct {
 	reliableMessageFactory ReliableMessageFactory
 }
 
-func (gf *MessageGeneralFactory) Init() IMessageGeneralFactory {
-	gf.contentFactories = make(map[string]ContentFactory)
-	gf.envelopeFactory = nil
-	gf.instantMessageFactory = nil
-	gf.secureMessageFactory = nil
-	gf.reliableMessageFactory = nil
-	return gf
+func NewMessageGeneralFactory() *MessageGeneralFactory {
+	return &MessageGeneralFactory{
+		contentFactories:       make(map[string]ContentFactory, 32),
+		envelopeFactory:        nil,
+		instantMessageFactory:  nil,
+		secureMessageFactory:   nil,
+		reliableMessageFactory: nil,
+	}
 }
 
 // Override

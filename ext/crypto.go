@@ -38,11 +38,6 @@ type ICryptoKeyGeneralFactory interface {
 	PublicKeyHelper
 }
 
-func NewCryptoKeyGeneralFactory() ICryptoKeyGeneralFactory {
-	gf := &CryptoKeyGeneralFactory{}
-	return gf.Init()
-}
-
 /**
  *  CryptographyKey GeneralFactory
  */
@@ -54,11 +49,12 @@ type CryptoKeyGeneralFactory struct {
 	publicKeyFactories    map[string]PublicKeyFactory
 }
 
-func (gf *CryptoKeyGeneralFactory) Init() ICryptoKeyGeneralFactory {
-	gf.symmetricKeyFactories = make(map[string]SymmetricKeyFactory)
-	gf.privateKeyFactories = make(map[string]PrivateKeyFactory)
-	gf.publicKeyFactories = make(map[string]PublicKeyFactory)
-	return gf
+func NewCryptoKeyGeneralFactory() *CryptoKeyGeneralFactory {
+	return &CryptoKeyGeneralFactory{
+		symmetricKeyFactories: make(map[string]SymmetricKeyFactory, 32),
+		privateKeyFactories:   make(map[string]PrivateKeyFactory, 32),
+		publicKeyFactories:    make(map[string]PublicKeyFactory, 32),
+	}
 }
 
 // Override

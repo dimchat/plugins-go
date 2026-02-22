@@ -172,7 +172,8 @@ func (key *RSAPrivateKey) Sign(data []byte) []byte {
 
 // Override
 func (key *RSAPrivateKey) PublicKey() PublicKey {
-	if key.publicKey == nil {
+	publicKey := key.publicKey
+	if publicKey == nil {
 		sKey := key.getPrivateKey()
 		pKey := &sKey.PublicKey
 		der, err := x509.MarshalPKIXPublicKey(pKey)
@@ -192,11 +193,14 @@ func (key *RSAPrivateKey) PublicKey() PublicKey {
 		info["mode"] = "ECB"
 		info["padding"] = "PKCS1"
 		info["digest"] = "SHA256"
-		newKey := NewRSAPublicKeyWithMap(info)
-		newKey.rsaPublicKey = pKey
-		key.publicKey = newKey
+		publicKey = &RSAPublicKey{
+			Dictionary:   NewDictionary(info),
+			rsaPublicKey: pKey,
+			data:         nil, // lazy load
+		}
+		key.publicKey = publicKey
 	}
-	return key.publicKey
+	return publicKey
 }
 
 //-------- IDecryptKey

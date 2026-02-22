@@ -43,21 +43,19 @@ type pnfFactory struct {
 }
 
 // Override
-func (factory pnfFactory) CreateTransportableFile(
+func (pnfFactory) CreateTransportableFile(
 	data TransportableData, filename string,
 	url URL, password DecryptKey,
 ) TransportableFile {
-	pnf := &PortableNetworkFile{}
-	return pnf.Init(data, filename, url, password)
+	return NewPortableNetworkFileWithData(data, filename, url, password)
 }
 
 // Override
-func (factory pnfFactory) ParseTransportableFile(info StringKeyMap) TransportableFile {
+func (pnfFactory) ParseTransportableFile(info StringKeyMap) TransportableFile {
 	// check 'data', 'URL', 'filename'
 	if !ContainsKey(info, "data") && !ContainsKey(info, "URL") && !ContainsKey(info, "filename") {
 		// pnf.data and pnf.URL and pnf.filename should not be empty at the same time
 		return nil
 	}
-	pnf := &PortableNetworkFile{}
-	return pnf.InitWithMap(info)
+	return NewPortableNetworkFileWithMap(info)
 }

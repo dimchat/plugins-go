@@ -43,11 +43,6 @@ type IFormatGeneralFactory interface {
 	TransportableDataHelper
 }
 
-func NewFormatGeneralFactory() IFormatGeneralFactory {
-	gf := &FormatGeneralFactory{}
-	return gf.Init()
-}
-
 type FormatGeneralFactory struct {
 	//IFormatGeneralFactory
 
@@ -55,10 +50,11 @@ type FormatGeneralFactory struct {
 	pnfFactory TransportableFileFactory
 }
 
-func (gf *FormatGeneralFactory) Init() IFormatGeneralFactory {
-	gf.tedFactory = nil
-	gf.pnfFactory = nil
-	return gf
+func NewFormatGeneralFactory() *FormatGeneralFactory {
+	return &FormatGeneralFactory{
+		tedFactory: nil, // NewTransportableDataFactory(),
+		pnfFactory: nil, // NewTransportableFileFactory(),
+	}
 }
 
 ///

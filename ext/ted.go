@@ -42,15 +42,14 @@ type tedFactory struct {
 }
 
 // Override
-func (factory tedFactory) ParseTransportableData(ted string) TransportableData {
+func (tedFactory) ParseTransportableData(ted string) TransportableData {
 	uri := ParseDataURI(ted)
 	if uri != nil {
 		encoding := uri.Head().Encoding()
 		encoding = strings.ToLower(encoding)
 		if encoding == BASE_64 {
 			// "data:image/jpeg;base64,..."
-			data := &EmbedData{}
-			return data.InitWithURI(uri)
+			return NewEmbedData("", nil, uri, uri.Head())
 		}
 		// TODO: other encoding?
 		return nil

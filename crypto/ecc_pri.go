@@ -50,7 +50,7 @@ func NewECCPrivateKey() PrivateKey {
 	return &ECCPrivateKey{
 		Dictionary: NewDictionary(info),
 		data:       ted,
-		publicKey:  nil,
+		publicKey:  nil, // lazy load
 	}
 }
 
@@ -138,7 +138,10 @@ func (key *ECCPrivateKey) PublicKey() PublicKey {
 		info["data"] = txt
 		info["curve"] = "SECP256k1"
 		info["digest"] = "SHA256"
-		publicKey = NewECCPublicKeyWithMap(info)
+		publicKey = &ECCPublicKey{
+			Dictionary: NewDictionary(info),
+			data:       nil, // lazy load
+		}
 		key.publicKey = publicKey
 	}
 	return publicKey

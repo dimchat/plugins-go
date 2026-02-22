@@ -28,7 +28,6 @@ package ext
 import (
 	. "github.com/dimchat/core-go/dkd"
 	. "github.com/dimchat/core-go/protocol"
-	. "github.com/dimchat/mkm-go/types"
 	. "github.com/dimchat/plugins-go/dkd"
 )
 
@@ -38,43 +37,25 @@ import (
 func registerCommandFactories() {
 
 	// Meta
-	registerCommandCreator(META, func(dict StringKeyMap) Command {
-		return NewMetaCommandWithMap(dict)
-	})
+	registerCommandCreator(META, NewMetaCommandWithMap)
 
 	// Document
-	registerCommandCreator(DOCUMENTS, func(dict StringKeyMap) Command {
-		return NewDocumentCommandWithMap(dict)
-	})
+	registerCommandCreator(DOCUMENTS, NewDocumentCommandWithMap)
 
 	// Receipt
-	registerCommandCreator(RECEIPT, func(dict StringKeyMap) Command {
-		return NewReceiptCommandWithMap(dict)
-	})
+	registerCommandCreator(RECEIPT, NewReceiptCommandWithMap)
 
 	// Group Commands
 	SetCommandFactory("group", &GroupCommandFactory{})
 
-	registerCommandCreator(INVITE, func(dict StringKeyMap) Command {
-		return NewInviteCommandWithMap(dict)
-	})
+	registerCommandCreator(INVITE, NewInviteCommandWithMap)
 	// 'expel' is deprecated (use 'reset' instead)
-	registerCommandCreator(EXPEL, func(dict StringKeyMap) Command {
-		return NewExpelCommandWithMap(dict)
-	})
-	registerCommandCreator(JOIN, func(dict StringKeyMap) Command {
-		return NewJoinCommandWithMap(dict)
-	})
-	registerCommandCreator(QUIT, func(dict StringKeyMap) Command {
-		return NewQuitCommandWithMap(dict)
-	})
+	registerCommandCreator(EXPEL, NewExpelCommandWithMap)
+	registerCommandCreator(JOIN, NewJoinCommandWithMap)
+	registerCommandCreator(QUIT, NewQuitCommandWithMap)
 	// 'query' is deprecated
-	//registerCommandCreator(QUERY, func(dict StringKeyMap) Command {
-	//	return NewQueryCommandWithMap(dict)
-	//})
-	registerCommandCreator(RESET, func(dict StringKeyMap) Command {
-		return NewResetCommandWithMap(dict)
-	})
+	//registerCommandCreator(QUERY, NewQueryCommandWithMap)
+	registerCommandCreator(RESET, NewResetCommandWithMap)
 
 }
 

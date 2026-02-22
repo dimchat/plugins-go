@@ -38,20 +38,16 @@ type ICommandGeneralFactory interface {
 	CommandHelper
 }
 
-func NewCommandGeneralFactory() ICommandGeneralFactory {
-	gf := &CommandGeneralFactory{}
-	return gf.Init()
-}
-
 type CommandGeneralFactory struct {
 	//ICommandGeneralFactory
 
 	commandFactories map[string]CommandFactory
 }
 
-func (gf *CommandGeneralFactory) Init() ICommandGeneralFactory {
-	gf.commandFactories = make(map[string]CommandFactory)
-	return gf
+func NewCommandGeneralFactory() *CommandGeneralFactory {
+	return &CommandGeneralFactory{
+		commandFactories: make(map[string]CommandFactory, 32),
+	}
 }
 
 // Override

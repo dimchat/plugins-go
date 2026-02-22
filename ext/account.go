@@ -42,11 +42,6 @@ type IAccountGeneralFactory interface {
 	DocumentHelper
 }
 
-func NewAccountGeneralFactory() IAccountGeneralFactory {
-	gf := &AccountGeneralFactory{}
-	return gf.Init()
-}
-
 /**
  *  Account GeneralFactory
  */
@@ -59,12 +54,13 @@ type AccountGeneralFactory struct {
 	docsFactories  map[string]DocumentFactory
 }
 
-func (gf *AccountGeneralFactory) Init() IAccountGeneralFactory {
-	gf.addressFactory = nil
-	gf.idFactory = nil
-	gf.metaFactories = make(map[string]MetaFactory)
-	gf.docsFactories = make(map[string]DocumentFactory)
-	return gf
+func NewAccountGeneralFactory() *AccountGeneralFactory {
+	return &AccountGeneralFactory{
+		addressFactory: nil,
+		idFactory:      nil,
+		metaFactories:  make(map[string]MetaFactory, 1024),
+		docsFactories:  make(map[string]DocumentFactory, 1024),
+	}
 }
 
 // Override

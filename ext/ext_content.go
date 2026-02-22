@@ -29,7 +29,6 @@ import (
 	. "github.com/dimchat/core-go/dkd"
 	. "github.com/dimchat/core-go/protocol"
 	. "github.com/dimchat/dkd-go/protocol"
-	. "github.com/dimchat/mkm-go/types"
 	. "github.com/dimchat/plugins-go/dkd"
 )
 
@@ -39,49 +38,29 @@ import (
 func registerContentFactories() {
 
 	// Text
-	registerContentCreator(ContentType.TEXT, func(dict StringKeyMap) Content {
-		return NewTextContentWithMap(dict)
-	})
+	registerContentCreator(ContentType.TEXT, NewTextContentWithMap)
 
 	// File
-	registerContentCreator(ContentType.FILE, func(dict StringKeyMap) Content {
-		return NewFileContentWithMap(dict)
-	})
+	registerContentCreator(ContentType.FILE, NewFileContentWithMap)
 	// Image
-	registerContentCreator(ContentType.IMAGE, func(dict StringKeyMap) Content {
-		return NewImageContentWithMap(dict)
-	})
+	registerContentCreator(ContentType.IMAGE, NewImageContentWithMap)
 	// Audio
-	registerContentCreator(ContentType.AUDIO, func(dict StringKeyMap) Content {
-		return NewAudioContentWithMap(dict)
-	})
+	registerContentCreator(ContentType.AUDIO, NewAudioContentWithMap)
 	// Video
-	registerContentCreator(ContentType.VIDEO, func(dict StringKeyMap) Content {
-		return NewVideoContentWithMap(dict)
-	})
+	registerContentCreator(ContentType.VIDEO, NewVideoContentWithMap)
 
 	// Web Page
-	registerContentCreator(ContentType.PAGE, func(dict StringKeyMap) Content {
-		return NewPageContentWithMap(dict)
-	})
+	registerContentCreator(ContentType.PAGE, NewPageContentWithMap)
 
 	// Name Card
-	registerContentCreator(ContentType.NAME_CARD, func(dict StringKeyMap) Content {
-		return NewNameCardWithMap(dict)
-	})
+	registerContentCreator(ContentType.NAME_CARD, NewNameCardWithMap)
 
 	// Quote
-	registerContentCreator(ContentType.QUOTE, func(dict StringKeyMap) Content {
-		return NewQuoteContentWithMap(dict)
-	})
+	registerContentCreator(ContentType.QUOTE, NewQuoteContentWithMap)
 
 	// Money
-	registerContentCreator(ContentType.MONEY, func(dict StringKeyMap) Content {
-		return NewMoneyContentWithMap(dict)
-	})
-	registerContentCreator(ContentType.TRANSFER, func(dict StringKeyMap) Content {
-		return NewTransferContentWithMap(dict)
-	})
+	registerContentCreator(ContentType.MONEY, NewMoneyContentWithMap)
+	registerContentCreator(ContentType.TRANSFER, NewTransferContentWithMap)
 	// ...
 
 	// Command
@@ -91,24 +70,16 @@ func registerContentFactories() {
 	SetContentFactory(ContentType.HISTORY, &HistoryCommandFactory{})
 
 	// Content Array
-	registerContentCreator(ContentType.ARRAY, func(dict StringKeyMap) Content {
-		return NewArrayContentWithMap(dict)
-	})
+	registerContentCreator(ContentType.ARRAY, NewArrayContentWithMap)
 
 	// Combine and Forward
-	registerContentCreator(ContentType.COMBINE_FORWARD, func(dict StringKeyMap) Content {
-		return NewCombineContentWithMap(dict)
-	})
+	registerContentCreator(ContentType.COMBINE_FORWARD, NewCombineContentWithMap)
 
 	// Top-Secret
-	registerContentCreator(ContentType.FORWARD, func(dict StringKeyMap) Content {
-		return NewForwardContentWithMap(dict)
-	})
+	registerContentCreator(ContentType.FORWARD, NewForwardContentWithMap)
 
 	// unknown content type
-	registerContentCreator(ContentType.ANY, func(dict StringKeyMap) Content {
-		return NewContentWithMap(dict)
-	})
+	registerContentCreator(ContentType.ANY, NewContentWithMap)
 
 }
 
@@ -118,12 +89,8 @@ func registerContentFactories() {
 func registerCustomizedFactories() {
 
 	// Application Customized Content
-	registerContentCreator(ContentType.CUSTOMIZED, func(dict StringKeyMap) Content {
-		return NewCustomizedContentWithMap(dict)
-	})
-	//registerContentCreator(ContentType.APPLICATION, func(dict StringKeyMap) Content {
-	//	return NewCustomizedContentWithMap(dict)
-	//})
+	registerContentCreator(ContentType.CUSTOMIZED, NewCustomizedContentWithMap)
+	//registerContentCreator(ContentType.APPLICATION, NewCustomizedContentWithMap)
 
 }
 
