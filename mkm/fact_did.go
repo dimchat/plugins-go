@@ -41,6 +41,7 @@ import (
 /**
  *  General ID Factory
  */
+
 type IdentifierFactory struct {
 	//IDFactory
 }

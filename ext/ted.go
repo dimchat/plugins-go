@@ -49,7 +49,7 @@ func (tedFactory) ParseTransportableData(ted string) TransportableData {
 		encoding = strings.ToLower(encoding)
 		if encoding == BASE_64 {
 			// "data:image/jpeg;base64,..."
-			return NewEmbedData("", nil, uri, uri.Head())
+			return NewEmbedDataWithURI(uri)
 		}
 		// TODO: other encoding?
 		return nil

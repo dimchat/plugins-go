@@ -38,6 +38,7 @@ import (
 /**
  *  Format GeneralFactory
  */
+
 type IFormatGeneralFactory interface {
 	TransportableFileHelper
 	TransportableDataHelper

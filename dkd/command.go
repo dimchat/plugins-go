@@ -47,12 +47,9 @@ type IGeneralCommandFactory interface {
 /**
  *  General Command Factory
  */
+
 type GeneralCommandFactory struct {
 	//IGeneralCommandFactory
-}
-
-func (gf GeneralCommandFactory) Init() IGeneralCommandFactory {
-	return gf
 }
 
 // Override

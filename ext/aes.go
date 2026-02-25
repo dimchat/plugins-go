@@ -40,17 +40,13 @@ type aesFactory struct {
 	//SymmetricKeyFactory
 }
 
-func (factory aesFactory) Init() SymmetricKeyFactory {
-	return factory
-}
-
 // Override
-func (factory aesFactory) GenerateSymmetricKey() SymmetricKey {
+func (aesFactory) GenerateSymmetricKey() SymmetricKey {
 	return NewAESKey()
 }
 
 // Override
-func (factory aesFactory) ParseSymmetricKey(key StringKeyMap) SymmetricKey {
+func (aesFactory) ParseSymmetricKey(key StringKeyMap) SymmetricKey {
 	// check 'data', 'algorithm'
 	if !ContainsKey(key, "data") || !ContainsKey(key, "algorithm") {
 		// key.data should not be empty
@@ -64,17 +60,13 @@ type plainFactory struct {
 	//SymmetricKeyFactory
 }
 
-func (factory plainFactory) Init() SymmetricKeyFactory {
-	return factory
-}
-
 // Override
-func (factory plainFactory) GenerateSymmetricKey() SymmetricKey {
+func (plainFactory) GenerateSymmetricKey() SymmetricKey {
 	return NewPlainKey()
 }
 
 // Override
-func (factory plainFactory) ParseSymmetricKey(key StringKeyMap) SymmetricKey {
+func (plainFactory) ParseSymmetricKey(key StringKeyMap) SymmetricKey {
 	// check 'algorithm'
 	algorithm := GetKeyAlgorithm(key)
 	if algorithm != PLAIN {

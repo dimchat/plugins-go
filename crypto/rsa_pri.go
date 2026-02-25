@@ -84,22 +84,27 @@ func NewRSAPrivateKeyWithMap(dict StringKeyMap) IRSAPrivateKey {
 	}
 }
 
-/**
- *  RSA Private Key
- *
- *      keyInfo format: {
- *          algorithm    : "RSA",
- *          data         : "..." // base64_encode()
- *      }
- */
+// RSAPrivateKey implements the IRSAPrivateKey interface for RSA asymmetric cryptography
+//
+// Provides RSA private key capabilities (signing, decryption, key pair management)
+//
+//	KeyInfo JSON Format: {
+//	    "algorithm": "RSA",
+//	    "data": "{BASE64}"   // Base64-encoded raw RSA private key material (PKCS#8 format)
+//	}
 type RSAPrivateKey struct {
 	//IRSAPrivateKey
 	*Dictionary
 
+	// rsaPrivateKey contains the parsed crypto/rsa.PrivateKey instance
+	//
+	// Pre-compiled RSA private key for direct use with standard library crypto functions
 	rsaPrivateKey *rsa.PrivateKey
 
+	// data contains the raw RSA private key material in transportable (serializable) format
 	data TransportableData
 
+	// publicKey caches the corresponding RSAPublicKey derived from this private key
 	publicKey PublicKey
 }
 

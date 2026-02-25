@@ -41,6 +41,7 @@ import (
 /**
  *  Base Address Factory
  */
+
 type BaseAddressFactory struct {
 	//AddressFactory
 }

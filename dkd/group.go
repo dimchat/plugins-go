@@ -48,10 +48,6 @@ type GroupCommandFactory struct {
 	//IGroupCommandFactory
 }
 
-func (gf GroupCommandFactory) Init() IGeneralCommandFactory {
-	return gf
-}
-
 // Override
 func (gf GroupCommandFactory) ParseContent(content StringKeyMap) Content {
 	helper := GetGeneralCommandHelper()

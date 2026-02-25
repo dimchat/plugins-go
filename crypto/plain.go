@@ -49,14 +49,16 @@ func NewPlainKeyWithMap(dict StringKeyMap) SymmetricKey {
 	}
 }
 
-/**
- *  Symmetric key for broadcast message,
- *  which will do nothing when en/decoding message data
- */
+// PlainKey implements the SymmetricKey interface for unencrypted/broadcast messages
+//
+// "Null" symmetric key that performs no actual encryption/decryption on message data
+//
+// Designed for broadcast messages where content should remain in plaintext
 type PlainKey struct {
 	//SymmetricKey
 	*Dictionary
 
+	// data contains placeholder key material (unused for plaintext operations)
 	data TransportableData
 }
 

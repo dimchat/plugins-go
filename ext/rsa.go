@@ -42,17 +42,13 @@ type rsaPrivateFactory struct {
 	//PrivateKeyFactory
 }
 
-func (factory rsaPrivateFactory) Init() PrivateKeyFactory {
-	return factory
-}
-
 // Override
-func (factory rsaPrivateFactory) GeneratePrivateKey() PrivateKey {
+func (rsaPrivateFactory) GeneratePrivateKey() PrivateKey {
 	return NewRSAPrivateKey()
 }
 
 // Override
-func (factory rsaPrivateFactory) ParsePrivateKey(key StringKeyMap) PrivateKey {
+func (rsaPrivateFactory) ParsePrivateKey(key StringKeyMap) PrivateKey {
 	// check 'data', 'algorithm'
 	if !ContainsKey(key, "data") || !ContainsKey(key, "algorithm") {
 		// key.data should not be empty
@@ -66,12 +62,8 @@ type rsaPublicFactory struct {
 	//PublicKeyFactory
 }
 
-func (factory rsaPublicFactory) Init() PublicKeyFactory {
-	return factory
-}
-
 // Override
-func (factory rsaPublicFactory) ParsePublicKey(key StringKeyMap) PublicKey {
+func (rsaPublicFactory) ParsePublicKey(key StringKeyMap) PublicKey {
 	// check 'data', 'algorithm'
 	if !ContainsKey(key, "data") || !ContainsKey(key, "algorithm") {
 		// key.data should not be empty

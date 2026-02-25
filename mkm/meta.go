@@ -38,22 +38,21 @@ import (
 	. "github.com/dimchat/mkm-go/types"
 )
 
-/**
- *  Default Meta to build ID with 'name@address'
- *
- *  version:
- *      1 - MKM
- *
- *  algorithm:
- *      CT      = fingerprint = sKey.sign(seed);
- *      hash    = ripemd160(sha256(CT));
- *      code    = sha256(sha256(network + hash)).prefix(4);
- *      address = base58_encode(network + hash + code);
- */
+// DefaultMeta is the standard Meta implementation for generating addresses for IDs
+//
+// # Serves as the base implementation for address generation using MKM scheme
+//
+// Version: 1 (MKM)
+//
+// Address Generation Algorithm (BTC-compatible):
+//  1. fingerprint = sign(seed, SK)
+//  2. digest      = RIPEMD160(SHA256(fingerprint))
+//  3. checksum    = SHA256(SHA256(network + digest))[:4]
+//  4. address     = Base58Encode(network + digest + checksum)
 type DefaultMeta struct {
 	*BaseMeta
 
-	// caches
+	// addresses caches generated Address instances by EntityType (network identifier)
 	addresses map[EntityType]Address
 }
 
@@ -79,22 +78,23 @@ func (meta *DefaultMeta) GenerateAddress(network EntityType) Address {
 	return address
 }
 
-/**
- *  Meta to build BTC address for ID
- *
- *  version:
- *      2 - BTC
- *
- *  algorithm:
- *      CT      = key.data;
- *      hash    = ripemd160(sha256(CT));
- *      code    = sha256(sha256(network + hash)).prefix(4);
- *      address = base58_encode(network + hash + code);
- */
+// BTCMeta is a specialized Meta implementation for generating BTC-compatible addresses for IDs
+//
+// # Optimized for Bitcoin address format generation using public key material directly
+//
+// Version: 2 (BTC)
+//
+// Address Generation Algorithm:
+//  1. CT          = Raw public key data (key.data)
+//  2. digest      = RIPEMD160(SHA256(CT))
+//  3. checksum    = SHA256(SHA256(network + digest))[:4]
+//  4. address     = Base58Encode(network + digest + checksum)
 type BTCMeta struct {
 	*BaseMeta
 
-	// caches
+	// addresses caches generated BTC Address instances by EntityType (network identifier)
+	//
+	// Supports multiple BTC network types (mainnet/testnet) with cached addresses
 	addresses map[EntityType]Address
 }
 
@@ -122,22 +122,22 @@ func (meta *BTCMeta) GenerateAddress(network EntityType) Address {
 	return address
 }
 
-/**
- *  Meta to build ETH address for ID
- *
- *  version:
- *      0x04 - ETH
- *      0x05 - ExETH
- *
- *  algorithm:
- *      CT      = key.data;  // without prefix byte
- *      digest  = keccak256(CT);
- *      address = hex_encode(digest.suffix(20));
- */
+// ETHMeta is a specialized Meta implementation for generating Ethereum-compatible addresses for IDs
+//
+// # Optimized for Ethereum address format generation using KECCAK256 hashing
+//
+// Version: 4 (ETH)
+//
+// Address Generation Algorithm:
+//  1. CT      = Raw public key data without prefix byte (key.data[1:] for 65-byte public keys)
+//  2. digest  = KECCAK256(CT)
+//  3. address = "0x" + HexEncode(last 20 bytes of digest) (EIP-55 checksum compliant)
 type ETHMeta struct {
 	*BaseMeta
 
-	// cached
+	// address caches the single generated ETH/ExETH Address instance
+	//
+	// ETH addresses are network-agnostic (fixed to USER EntityType) so single cache entry suffices
 	address Address
 }
 

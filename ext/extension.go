@@ -45,13 +45,10 @@ type ExtensionLoader struct {
 	//IExtensionLoader
 }
 
-func (loader ExtensionLoader) Init() IExtensionLoader {
-	return loader
-}
-
 /**
  *  Register core factories
  */
+
 func (loader ExtensionLoader) Load() {
 
 	loader.RegisterCoreHelpers()
@@ -66,6 +63,7 @@ func (loader ExtensionLoader) Load() {
 /**
  *  Core extensions
  */
+
 // protected
 func (loader ExtensionLoader) RegisterCoreHelpers() {
 
@@ -108,6 +106,7 @@ func (loader ExtensionLoader) RegisterCoreHelpers() {
 /**
  *  Message factories
  */
+
 // protected
 func (loader ExtensionLoader) RegisterMessageFactories() {
 
@@ -123,6 +122,7 @@ func (loader ExtensionLoader) RegisterMessageFactories() {
 /**
  *  Core content factories
  */
+
 // protected
 func (loader ExtensionLoader) RegisterContentFactories() {
 	registerContentFactories()
@@ -132,6 +132,7 @@ func (loader ExtensionLoader) RegisterContentFactories() {
 /**
  *  Core command factories
  */
+
 // protected
 func (loader ExtensionLoader) RegisterCommandFactories() {
 	registerCommandFactories()

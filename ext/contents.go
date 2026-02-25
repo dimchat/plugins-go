@@ -48,8 +48,8 @@ func NewCommandFactory(create FuncCreateCommand) CommandFactory {
 
 /**
  *  Content Factory
- *  ~~~~~~~~~~~~~~~
  */
+
 type contentFactory struct {
 	//ContentFactory
 
@@ -63,8 +63,8 @@ func (cf *contentFactory) ParseContent(content StringKeyMap) Content {
 
 /**
  *  Command Factory
- *  ~~~~~~~~~~~~~~~
  */
+
 type commandFactory struct {
 	//CommandFactory
 

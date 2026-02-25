@@ -25,9 +25,7 @@
  */
 package mem
 
-/**
- *  Random Cache
- */
+// Random Cache
 type ThanosCache[K comparable, V any] struct {
 	//MemoryCache
 
@@ -52,15 +50,18 @@ func (cache *ThanosCache[K, V]) Put(key K, value V) {
 }
 
 // Override
+func (cache *ThanosCache[K, V]) Size() int {
+	return len(cache.table)
+}
+
+// Override
 func (cache *ThanosCache[K, V]) ReduceMemory() int {
 	finger := 0
 	finger = thanos(cache.table, finger)
 	return finger >> 1
 }
 
-/**
- *  Thanos can kill half lives of a world with a snap of the finger
- */
+// thanos can kill half lives of a world with a snap of the finger
 func thanos[K comparable, V any](planet map[K]V, finger int) int {
 	for key := range planet {
 		finger++

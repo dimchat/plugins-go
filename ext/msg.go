@@ -44,6 +44,7 @@ type IMessageGeneralFactory interface {
 /**
  *  Message GeneralFactory
  */
+
 type MessageGeneralFactory struct {
 	//MessageGeneralFactory
 

@@ -35,6 +35,7 @@ import (
 /**
  *  Core content factories
  */
+
 func registerContentFactories() {
 
 	// Text
@@ -86,6 +87,7 @@ func registerContentFactories() {
 /**
  *  Customized content factories
  */
+
 func registerCustomizedFactories() {
 
 	// Application Customized Content

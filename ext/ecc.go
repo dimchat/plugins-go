@@ -39,17 +39,13 @@ type eccPrivateFactory struct {
 	//PrivateKeyFactory
 }
 
-func (factory eccPrivateFactory) Init() PrivateKeyFactory {
-	return factory
-}
-
 // Override
-func (factory eccPrivateFactory) GeneratePrivateKey() PrivateKey {
+func (eccPrivateFactory) GeneratePrivateKey() PrivateKey {
 	return NewECCPrivateKey()
 }
 
 // Override
-func (factory eccPrivateFactory) ParsePrivateKey(key StringKeyMap) PrivateKey {
+func (eccPrivateFactory) ParsePrivateKey(key StringKeyMap) PrivateKey {
 	// check 'data', 'algorithm'
 	if !ContainsKey(key, "data") || !ContainsKey(key, "algorithm") {
 		// key.data should not be empty
@@ -63,12 +59,8 @@ type eccPublicFactory struct {
 	//PublicKeyFactory
 }
 
-func (factory eccPublicFactory) Init() PublicKeyFactory {
-	return factory
-}
-
 // Override
-func (factory eccPublicFactory) ParsePublicKey(key StringKeyMap) PublicKey {
+func (eccPublicFactory) ParsePublicKey(key StringKeyMap) PublicKey {
 	// check 'data', 'algorithm'
 	if !ContainsKey(key, "data") || !ContainsKey(key, "algorithm") {
 		// key.data should not be empty

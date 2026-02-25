@@ -65,21 +65,21 @@ func NewAESKeyWithMap(dict StringKeyMap) SymmetricKey {
 	}
 }
 
-/**
- *  AES Key
- *
- *  <blockquote><pre>
- *  keyInfo format: {
- *      "algorithm": "AES",
- *      "keySize"  : 32,                // optional
- *      "data"     : "{BASE64_ENCODE}}" // password data
- *  }
- *  </pre></blockquote>
- */
+// AESKey implements the SymmetricKey interface for AES encryption/decryption
+//
+// Standard symmetric key for secure message encryption with configurable key sizes
+// (typically 32 bytes for AES-256)
+//
+//	KeyInfo JSON Format: {
+//	    "algorithm" : "AES",
+//	    "keySize"   : 32,         // Optional: Key size in bytes (16=AES-128, 24=AES-192, 32=AES-256)
+//	    "data"      : "{BASE64}"  // Base64-encoded raw key material
+//	}
 type AESKey struct {
 	//SymmetricKey
 	*Dictionary
 
+	// data contains the raw AES key material in transportable (serializable) format
 	data TransportableData
 }
 

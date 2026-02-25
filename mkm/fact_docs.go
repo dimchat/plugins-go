@@ -43,6 +43,7 @@ import (
 /**
  *  General Document Factory
  */
+
 type GeneralDocumentFactory struct {
 	//DocumentFactory
 

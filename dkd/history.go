@@ -48,10 +48,6 @@ type HistoryCommandFactory struct {
 	//IHistoryCommandFactory
 }
 
-func (gf HistoryCommandFactory) Init() IHistoryCommandFactory {
-	return gf
-}
-
 // Override
 func (gf HistoryCommandFactory) ParseContent(content StringKeyMap) Content {
 	helper := GetGeneralCommandHelper()

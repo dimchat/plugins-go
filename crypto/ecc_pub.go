@@ -42,21 +42,20 @@ func NewECCPublicKeyWithMap(dict StringKeyMap) PublicKey {
 	}
 }
 
-/**
- *  ECC Public Key
- *
- *  <blockquote><pre>
- *  keyInfo format: {
- *      "algorithm"    : "ECC",
- *      "curve"        : "secp256k1",
- *      "data"         : "..." // base64_encode()
- *  }
- *  </pre></blockquote>
- */
+// ECCPublicKey implements the PublicKey interface for ECC (Elliptic Curve Cryptography)
+//
+// Corresponding public key for ECCPrivateKey, uses secp256k1 curve
+//
+//	KeyInfo JSON Format: {
+//	    "algorithm": "ECC",
+//	    "curve": "secp256k1",  // Elliptic curve identifier (matches private key curve)
+//	    "data": "{BASE64}"     // Base64-encoded raw ECC public key material
+//	}
 type ECCPublicKey struct {
 	//PublicKey
 	*Dictionary
 
+	// data contains the raw ECC public key material in transportable (serializable) format
 	data TransportableData
 }
 

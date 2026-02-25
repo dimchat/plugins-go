@@ -85,11 +85,9 @@ type snGenerator struct {
 	_sn uint32
 }
 
-/**
- *  next sn
- *
- * @return 1 ~ 2^31-1
- */
+// nextSN returns new serial number
+//
+// Returns 1 → 2^31-1
 func (gen *snGenerator) nextSN() uint32 {
 	var current uint32
 	var next uint32

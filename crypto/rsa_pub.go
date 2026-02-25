@@ -45,7 +45,7 @@ type IRSAPublicKey interface {
 	EncryptKey
 }
 
-func NewRSAPublicKeyWithMap(dict StringKeyMap) *RSAPublicKey {
+func NewRSAPublicKeyWithMap(dict StringKeyMap) IRSAPublicKey {
 	return &RSAPublicKey{
 		Dictionary: NewDictionary(dict),
 		// lazy load
@@ -54,22 +54,24 @@ func NewRSAPublicKeyWithMap(dict StringKeyMap) *RSAPublicKey {
 	}
 }
 
-/**
- *  RSA Public Key
- *
- *  <blockquote><pre>
- *  keyInfo format: {
- *      "algorithm" : "RSA",
- *      "data"      : "..." // base64_encode()
- *  }
- *  </pre></blockquote>
- */
+// RSAPublicKey implements the PublicKey and EncryptKey interfaces for RSA cryptography
+//
+// Corresponding public key for RSAPrivateKey (encryption, signature verification)
+//
+//	KeyInfo JSON Format: {
+//	    "algorithm": "RSA",
+//	    "data": "{BASE64}"   // Base64-encoded raw RSA public key material (PKCS#1 format)
+//	}
 type RSAPublicKey struct {
 	//PublicKey, EncryptKey
 	*Dictionary
 
+	// rsaPublicKey contains the parsed crypto/rsa.PublicKey instance
+	//
+	// Pre-compiled RSA public key for direct use with standard library crypto functions
 	rsaPublicKey *rsa.PublicKey
 
+	// data contains the raw RSA public key material in transportable (serializable) format
 	data TransportableData
 }
 

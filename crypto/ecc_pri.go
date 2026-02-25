@@ -63,23 +63,23 @@ func NewECCPrivateKeyWithMap(dict StringKeyMap) PrivateKey {
 	}
 }
 
-/**
- *  ECC Private Key
- *
- *  <blockquote><pre>
- *  keyInfo format: {
- *      "algorithm"    : "ECC",
- *      "curve"        : "secp256k1",
- *      "data"         : "..." // base64_encode()
- *  }
- *  </pre></blockquote>
- */
+// ECCPrivateKey implements the PrivateKey interface for ECC (Elliptic Curve Cryptography)
+//
+// Uses secp256k1 curve (Bitcoin/Ethereum standard) for asymmetric cryptography
+//
+//	KeyInfo JSON Format: {
+//	    "algorithm" : "ECC",
+//	    "curve"     : "secp256k1",  // Elliptic curve identifier (secp256k1 is primary supported curve)
+//	    "data"      : "{BASE64}"    // Base64-encoded raw ECC private key material
+//	}
 type ECCPrivateKey struct {
 	//PrivateKey
 	*Dictionary
 
+	// data contains the raw ECC private key material in transportable (serializable) format
 	data TransportableData
 
+	// publicKey caches the corresponding ECCPublicKey derived from this private key
 	publicKey PublicKey
 }
 

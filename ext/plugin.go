@@ -47,6 +47,7 @@ type PluginLoader struct {
 /**
  *  Register plugins
  */
+
 func (loader PluginLoader) Load() {
 
 	loader.RegisterCoders()
@@ -62,6 +63,7 @@ func (loader PluginLoader) Load() {
 /**
  *  Data coders
  */
+
 // protected
 func (loader PluginLoader) RegisterCoders() {
 
@@ -88,6 +90,7 @@ func (loader PluginLoader) RegisterCoders() {
 /**
  *  Message digesters
  */
+
 // protected
 func (loader PluginLoader) RegisterDigesters() {
 
@@ -105,6 +108,7 @@ func (loader PluginLoader) RegisterDigesters() {
 /**
  *  Symmetric key parsers
  */
+
 // protected
 func (loader PluginLoader) RegisterSymmetricKeyFactories() {
 
@@ -122,6 +126,7 @@ func (loader PluginLoader) RegisterSymmetricKeyFactories() {
 /**
  *  Asymmetric key parsers
  */
+
 // protected
 func (loader PluginLoader) RegisterAsymmetricKeyFactories() {
 
@@ -150,6 +155,7 @@ func (loader PluginLoader) RegisterAsymmetricKeyFactories() {
 /**
  *  ID, Address, Meta, Document parsers
  */
+
 // protected
 func (loader PluginLoader) RegisterEntityFactories() {
 

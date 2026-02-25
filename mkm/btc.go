@@ -38,27 +38,37 @@ import (
 	. "github.com/dimchat/plugins-go/types"
 )
 
-/**
- *  Address like BitCoin
- *
- *      data format: "network+digest+code"
- *          network    --  1 byte
- *          digest     -- 20 bytes
- *          code       --  4 bytes
- *
- *      algorithm:
- *          fingerprint = sign(seed, SK);
- *          digest      = ripemd160(sha256(fingerprint));
- *          code        = sha256(sha256(network + digest)).prefix(4);
- *          address     = base58_encode(network + digest + code);
- */
+// -------------------------------------------------------------------------
+//  Bitcoin (BTC) Address Implementation
+// -------------------------------------------------------------------------
+
+// BTCAddress implements the Address interface using Bitcoin-style address format.
+//
+//	Format Structure (base58 encoded): "network+digest+checksum"
+//	    network  :  1 byte
+//	    digest   : 20 bytes
+//	    checksum :  4 bytes
+//
+// Generation Algorithm:
+//  1. fingerprint = sign(seed, SK)
+//  2. digest      = RIPEMD160(SHA256(fingerprint))
+//  3. checksum    = SHA256(SHA256(network + digest))[:4]
+//  4. address     = Base58Encode(network + digest + checksum)
 type BTCAddress struct {
 	//Address
 	ConstantString
 
+	// network identifies the blockchain/entity type for this address
 	network EntityType
 }
 
+// NewBTCAddress creates a new BTCAddress instance with the given address string and network type
+//
+// Parameters:
+//   - address - Base58-encoded BTC address string
+//   - network - EntityType (blockchain network identifier)
+//
+// Returns: Pointer to initialized BTCAddress instance
 func NewBTCAddress(address string, network EntityType) *BTCAddress {
 	return &BTCAddress{
 		ConstantString: *NewConstantString(address),
@@ -71,13 +81,15 @@ func (address BTCAddress) Network() EntityType {
 	return address.network
 }
 
-/**
- *  Generate address with fingerprint and network ID
- *
- * @param fingerprint = meta.fingerprint or key.data
- * @param network - address type
- * @return Address object
- */
+// GenerateBTCAddress creates a valid BTCAddress from a fingerprint and network type
+//
+// # Follows standard Bitcoin address generation algorithm with double hashing and checksum
+//
+// Parameters:
+//   - fingerprint - Meta.fingerprint or PublicKey.data
+//   - network     - EntityType (blockchain network identifier)
+//
+// Returns: Valid Address interface implementation (BTCAddress)
 func GenerateBTCAddress(fingerprint []byte, network EntityType) Address {
 	// 1. digest = ripemd160(sha256(fingerprint))
 	digest := RIPEMD160(SHA256(fingerprint))
@@ -95,12 +107,14 @@ func GenerateBTCAddress(fingerprint []byte, network EntityType) Address {
 	return NewBTCAddress(base58, network)
 }
 
-/**
- *  Parse a string for BTC address
- *
- * @param base58 - address string
- * @return null on error
- */
+// ParseBTCAddress validates and parses a Base58 string into a BTCAddress
+//
+// # Performs length validation and checksum verification before creating address
+//
+// Parameters:
+//   - base58 - Base58-encoded BTC address string to parse
+//
+// Returns: Valid Address (BTCAddress) if parsing succeeds, nil if invalid
 func ParseBTCAddress(base58 string) Address {
 	// decode
 	data := Base58Decode(base58)
@@ -114,6 +128,7 @@ func ParseBTCAddress(base58 string) Address {
 	BytesCopy(data, 0, prefix, 0, 21)
 	BytesCopy(data, 21, suffix, 0, 4)
 	cc := checkCode(prefix)
+	// verify
 	if BytesEqual(cc, suffix) {
 		network := EntityType(data[0])
 		return NewBTCAddress(base58, network)
@@ -122,6 +137,14 @@ func ParseBTCAddress(base58 string) Address {
 	return nil
 }
 
+// checkCode computes the 4-byte checksum for BTC address validation
+//
+// # Implements double SHA256 hashing (SHA256(SHA256(data))) and returns first 4 bytes
+//
+// Parameters:
+//   - data - Byte slice to compute checksum for (network+digest for BTC addresses)
+//
+// Returns: 4-byte checksum slice
 func checkCode(data []byte) []byte {
 	sha256d := SHA256(SHA256(data))
 	cc := make([]byte, 4)

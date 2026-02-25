@@ -27,30 +27,58 @@ package mem
 
 import . "github.com/dimchat/mkm-go/types"
 
+// MemoryCache defines a generic in-memory cache interface for key-value storage
+//
+// Generic Constraints:
+//
+//	K: comparable - Cache key type (must support ==/!= comparison for lookups)
+//	V: any        - Cache value type (can be any Go type)
+//
+// Core capabilities: Key-value access, storage, and memory optimization
 type MemoryCache[K comparable, V any] interface {
 
-	/**
-	 *  Get value for key
-	 *
-	 * @param key - cache key
-	 * @return cached value
-	 */
+	// Get retrieves the cached value for the specified key
+	//
+	// If the key does not exist in the cache, returns the zero value for type V
+	//
+	// Parameters:
+	//   - key - Cache key to look up (must be comparable type)
+	// Returns: Cached value for the key (zero value if key not found)
 	Get(key K) V
 
-	/**
-	 *  Set value for key
-	 *
-	 * @param key   - cache key
-	 * @param value - cache value
-	 */
+	// Put stores a value in the cache associated with the specified key
+	//
+	// Overwrites any existing value if the key already exists
+	//
+	// Parameters:
+	//   - key   - Cache key to associate with the value (must be comparable type)
+	//   - value - Value to store in the cache (can be any type)
 	Put(key K, value V)
 
-	/**
-	 *  Garbage Collection
-	 */
+	// Size returns the current number of entries in the cache
+	//
+	// Provides real-time count of key-value pairs stored in memory
+	//
+	// Returns: Total number of cached entries (0 if cache is empty)
+	Size() int
+
+	// ReduceMemory performs garbage collection/optimization on the cache
+	//
+	// Implements cache eviction strategies (e.g., LRU, TTL, size limit) to free memory
+	//
+	// Returns: Number of cache entries remaining after memory reduction (post-eviction count)
 	ReduceMemory() int
 }
 
+// ContainsKey checks if a specific key exists in a StringKeyMap
+//
+// # Provides a convenience wrapper for map existence checking
+//
+// Parameters:
+//   - info - StringKeyMap (map[string]any) to check for the key
+//   - key  - String key to look up in the map
+//
+// Returns: true if key exists in the map, false otherwise
 func ContainsKey(info StringKeyMap, key string) bool {
 	_, exist := info[key]
 	return exist

@@ -34,6 +34,7 @@ import (
 /**
  *  Core command factories
  */
+
 func registerCommandFactories() {
 
 	// Meta

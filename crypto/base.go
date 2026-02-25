@@ -82,34 +82,26 @@ func MatchSignKey(sKey SignKey, pKey VerifyKey) bool {
 //
 
 func symmetricKeyEqual(key SymmetricKey, other interface{}) bool {
-	// check targeted value
-	target, rv := ObjectReflectValue(other)
-	if target == nil {
+	if other == nil {
 		return key.IsEmpty()
 	} else if other == key {
 		// same object
 		return true
 	}
-	// check value types
-	switch v := target.(type) {
+	var dictionary StringKeyMap
+	switch v := other.(type) {
 	case SymmetricKey:
 		// compare by encryption
 		return MatchEncryptKey(v, key)
 	case Mapper:
-		other = v.Map()
+		dictionary = v.Map()
 	case StringKeyMap:
-		other = v
+		dictionary = v
 	default:
-		// other types
-		switch rv.Kind() {
-		case reflect.Map:
-			other = rv.Interface() //.(StringKeyMap)
-		default:
-			// type not matched
-			return false
-		}
+		// type not matched
+		return false
 	}
-	return reflect.DeepEqual(key.Map(), other)
+	return reflect.DeepEqual(key.Map(), dictionary)
 }
 
 //
@@ -117,32 +109,24 @@ func symmetricKeyEqual(key SymmetricKey, other interface{}) bool {
 //
 
 func privateKeyEqual(key PrivateKey, other interface{}) bool {
-	// check targeted value
-	target, rv := ObjectReflectValue(other)
-	if target == nil {
+	if other == nil {
 		return key.IsEmpty()
 	} else if other == key {
 		// same object
 		return true
 	}
-	// check value types
-	switch v := target.(type) {
+	var dictionary StringKeyMap
+	switch v := other.(type) {
 	case PrivateKey:
 		// compare by signature
 		return MatchSignKey(v, key.PublicKey())
 	case Mapper:
-		other = v.Map()
+		dictionary = v.Map()
 	case StringKeyMap:
-		other = v
+		dictionary = v
 	default:
-		// other types
-		switch rv.Kind() {
-		case reflect.Map:
-			other = rv.Interface() //.(StringKeyMap)
-		default:
-			// type not matched
-			return false
-		}
+		// type not matched
+		return false
 	}
-	return reflect.DeepEqual(key.Map(), other)
+	return reflect.DeepEqual(key.Map(), dictionary)
 }

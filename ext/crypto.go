@@ -41,6 +41,7 @@ type ICryptoKeyGeneralFactory interface {
 /**
  *  CryptographyKey GeneralFactory
  */
+
 type CryptoKeyGeneralFactory struct {
 	//ICryptoKeyGeneralFactory
 

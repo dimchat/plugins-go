@@ -45,6 +45,7 @@ type IAccountGeneralFactory interface {
 /**
  *  Account GeneralFactory
  */
+
 type AccountGeneralFactory struct {
 	//IAccountGeneralFactory
 
