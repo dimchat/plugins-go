@@ -40,7 +40,7 @@ type SHA256Digester struct {
 }
 
 // Override
-func (digester SHA256Digester) Digest(data []byte) []byte {
+func (SHA256Digester) Digest(data []byte) []byte {
 	hash := sha256.Sum256(data)
 	return hash[:]
 }

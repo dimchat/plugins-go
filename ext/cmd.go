@@ -71,7 +71,7 @@ func (gf *CommandGeneralFactory) GetCommandFactory(cmd string) CommandFactory {
 }
 
 // Override
-func (gf *CommandGeneralFactory) ParseCommand(content interface{}) Command {
+func (gf *CommandGeneralFactory) ParseCommand(content any) Command {
 	if content == nil {
 		return nil
 	} else if command, ok := content.(Command); ok {

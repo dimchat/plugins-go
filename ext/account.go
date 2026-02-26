@@ -112,7 +112,7 @@ func (gf *AccountGeneralFactory) GetAddressFactory() AddressFactory {
 }
 
 // Override
-func (gf *AccountGeneralFactory) ParseAddress(address interface{}) Address {
+func (gf *AccountGeneralFactory) ParseAddress(address any) Address {
 	if address == nil {
 		return nil
 	} else if addr, ok := address.(Address); ok {
@@ -148,7 +148,7 @@ func (gf *AccountGeneralFactory) GetIDFactory() IDFactory {
 }
 
 // Override
-func (gf *AccountGeneralFactory) ParseID(did interface{}) ID {
+func (gf *AccountGeneralFactory) ParseID(did any) ID {
 	if did == nil {
 		return nil
 	} else if id, ok := did.(ID); ok {
@@ -202,7 +202,7 @@ func (gf *AccountGeneralFactory) GenerateMeta(version MetaType, sKey SignKey, se
 }
 
 // Override
-func (gf *AccountGeneralFactory) ParseMeta(meta interface{}) Meta {
+func (gf *AccountGeneralFactory) ParseMeta(meta any) Meta {
 	if meta == nil {
 		return nil
 	} else if m, ok := meta.(Meta); ok {
@@ -247,7 +247,7 @@ func (gf *AccountGeneralFactory) CreateDocument(docType DocumentType, data strin
 }
 
 // Override
-func (gf *AccountGeneralFactory) ParseDocument(doc interface{}) Document {
+func (gf *AccountGeneralFactory) ParseDocument(doc any) Document {
 	if doc == nil {
 		return nil
 	} else if d, ok := doc.(Document); ok {

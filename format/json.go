@@ -41,7 +41,7 @@ type JSONCoder struct {
 }
 
 // Override
-func (coder JSONCoder) Encode(object interface{}) string {
+func (JSONCoder) Encode(object any) string {
 	bytes, err := json.Marshal(object)
 	if err == nil {
 		return string(bytes)
@@ -51,7 +51,7 @@ func (coder JSONCoder) Encode(object interface{}) string {
 }
 
 // Override
-func (coder JSONCoder) Decode(str string) interface{} {
+func (JSONCoder) Decode(str string) any {
 	bytes := []byte(str)
 	for _, ch := range bytes {
 		if ch == '{' {
@@ -64,7 +64,7 @@ func (coder JSONCoder) Decode(str string) interface{} {
 			return nil
 		} else if ch == '[' {
 			// decode to array
-			var array []interface{}
+			var array []any
 			err := json.Unmarshal(bytes, &array)
 			if err == nil {
 				return array

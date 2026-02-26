@@ -41,7 +41,7 @@ type Base58Coder struct {
 }
 
 // Override
-func (coder Base58Coder) Encode(data []byte) string {
+func (Base58Coder) Encode(data []byte) string {
 	x := big.NewInt(0).SetBytes(data)
 	base := big.NewInt(58)
 	zero := big.NewInt(0)
@@ -56,7 +56,7 @@ func (coder Base58Coder) Encode(data []byte) string {
 }
 
 // Override
-func (coder Base58Coder) Decode(string string) []byte {
+func (Base58Coder) Decode(string string) []byte {
 	result := big.NewInt(0)
 	input := []byte(string)
 	for _, b := range input {

@@ -96,7 +96,7 @@ func (key *AESKey) blockSize() uint {
 }
 
 // Override
-func (key *AESKey) Equal(other interface{}) bool {
+func (key *AESKey) Equal(other any) bool {
 	return symmetricKeyEqual(key, other)
 }
 
@@ -122,7 +122,7 @@ func (key *AESKey) Data() TransportableData {
 // protected
 func (key *AESKey) initVector(params StringKeyMap) []byte {
 	// get base64 encoded IV from params
-	var base64 interface{}
+	var base64 any
 	if params != nil {
 		base64 = params["IV"]
 		if base64 == nil {

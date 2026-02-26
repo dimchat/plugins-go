@@ -63,7 +63,7 @@ type PlainKey struct {
 }
 
 // Override
-func (key *PlainKey) Equal(other interface{}) bool {
+func (key *PlainKey) Equal(other any) bool {
 	return symmetricKeyEqual(key, other)
 }
 

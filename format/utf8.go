@@ -36,11 +36,11 @@ type UTF8Coder struct {
 }
 
 // Override
-func (coder UTF8Coder) Encode(str string) []byte {
+func (UTF8Coder) Encode(str string) []byte {
 	return []byte(str)
 }
 
 // Override
-func (coder UTF8Coder) Decode(bytes []byte) string {
+func (UTF8Coder) Decode(bytes []byte) string {
 	return string(bytes)
 }

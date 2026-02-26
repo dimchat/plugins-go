@@ -40,12 +40,12 @@ type Base64Coder struct {
 }
 
 // Override
-func (coder Base64Coder) Encode(data []byte) string {
+func (Base64Coder) Encode(data []byte) string {
 	return base64.StdEncoding.EncodeToString(data)
 }
 
 // Override
-func (coder Base64Coder) Decode(string string) []byte {
+func (Base64Coder) Decode(string string) []byte {
 	bytes, err := base64.StdEncoding.DecodeString(string)
 	if err != nil {
 		panic(err)

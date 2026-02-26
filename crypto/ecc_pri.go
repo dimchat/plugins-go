@@ -84,7 +84,7 @@ type ECCPrivateKey struct {
 }
 
 // Override
-func (key *ECCPrivateKey) Equal(other interface{}) bool {
+func (key *ECCPrivateKey) Equal(other any) bool {
 	return privateKeyEqual(key, other)
 }
 

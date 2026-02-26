@@ -109,7 +109,7 @@ type RSAPrivateKey struct {
 }
 
 // Override
-func (key *RSAPrivateKey) Equal(other interface{}) bool {
+func (key *RSAPrivateKey) Equal(other any) bool {
 	return privateKeyEqual(key, other)
 }
 

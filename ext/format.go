@@ -73,7 +73,7 @@ func (gf *FormatGeneralFactory) GetTransportableDataFactory() TransportableDataF
 }
 
 // Override
-func (gf *FormatGeneralFactory) ParseTransportableData(ted interface{}) TransportableData {
+func (gf *FormatGeneralFactory) ParseTransportableData(ted any) TransportableData {
 	if ted == nil {
 		return nil
 	} else if data, ok := ted.(TransportableData); ok {
@@ -111,7 +111,7 @@ func (gf *FormatGeneralFactory) CreateTransportableFile(data TransportableData, 
 }
 
 // Override
-func (gf *FormatGeneralFactory) ParseTransportableFile(pnf interface{}) TransportableFile {
+func (gf *FormatGeneralFactory) ParseTransportableFile(pnf any) TransportableFile {
 	if pnf == nil {
 		return nil
 	} else if file, ok := pnf.(TransportableFile); ok {
@@ -127,7 +127,7 @@ func (gf *FormatGeneralFactory) ParseTransportableFile(pnf interface{}) Transpor
 }
 
 // protected
-func (gf *FormatGeneralFactory) getTransportableFileContent(pnf interface{}) StringKeyMap {
+func (gf *FormatGeneralFactory) getTransportableFileContent(pnf any) StringKeyMap {
 	info := FetchMap(pnf)
 	if info != nil {
 		return info

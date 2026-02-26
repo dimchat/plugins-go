@@ -81,7 +81,7 @@ func MatchSignKey(sKey SignKey, pKey VerifyKey) bool {
 //  Symmetric
 //
 
-func symmetricKeyEqual(key SymmetricKey, other interface{}) bool {
+func symmetricKeyEqual(key SymmetricKey, other any) bool {
 	if other == nil {
 		return key.IsEmpty()
 	} else if other == key {
@@ -108,7 +108,7 @@ func symmetricKeyEqual(key SymmetricKey, other interface{}) bool {
 //  Asymmetric
 //
 
-func privateKeyEqual(key PrivateKey, other interface{}) bool {
+func privateKeyEqual(key PrivateKey, other any) bool {
 	if other == nil {
 		return key.IsEmpty()
 	} else if other == key {

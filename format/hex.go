@@ -40,12 +40,12 @@ type HexCoder struct {
 }
 
 // Override
-func (coder HexCoder) Encode(data []byte) string {
+func (HexCoder) Encode(data []byte) string {
 	return hex.EncodeToString(data)
 }
 
 // Override
-func (coder HexCoder) Decode(string string) []byte {
+func (HexCoder) Decode(string string) []byte {
 	bytes, err := hex.DecodeString(string)
 	if err != nil {
 		panic(err)

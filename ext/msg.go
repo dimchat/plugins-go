@@ -86,7 +86,7 @@ func (gf *MessageGeneralFactory) GetContentFactory(msgType MessageType) ContentF
 }
 
 // Override
-func (gf *MessageGeneralFactory) ParseContent(content interface{}) Content {
+func (gf *MessageGeneralFactory) ParseContent(content any) Content {
 	if content == nil {
 		return nil
 	} else if c, ok := content.(Content); ok {
@@ -132,7 +132,7 @@ func (gf *MessageGeneralFactory) CreateEnvelope(from, to ID, when Time) Envelope
 }
 
 // Override
-func (gf *MessageGeneralFactory) ParseEnvelope(env interface{}) Envelope {
+func (gf *MessageGeneralFactory) ParseEnvelope(env any) Envelope {
 	if env == nil {
 		return nil
 	} else if envelope, ok := env.(Envelope); ok {
@@ -168,7 +168,7 @@ func (gf *MessageGeneralFactory) CreateInstantMessage(head Envelope, body Conten
 }
 
 // Override
-func (gf *MessageGeneralFactory) ParseInstantMessage(msg interface{}) InstantMessage {
+func (gf *MessageGeneralFactory) ParseInstantMessage(msg any) InstantMessage {
 	if msg == nil {
 		return nil
 	} else if iMsg, ok := msg.(InstantMessage); ok {
@@ -204,7 +204,7 @@ func (gf *MessageGeneralFactory) GetSecureMessageFactory() SecureMessageFactory 
 }
 
 // Override
-func (gf *MessageGeneralFactory) ParseSecureMessage(msg interface{}) SecureMessage {
+func (gf *MessageGeneralFactory) ParseSecureMessage(msg any) SecureMessage {
 	if msg == nil {
 		return nil
 	} else if sMsg, ok := msg.(SecureMessage); ok {
@@ -234,7 +234,7 @@ func (gf *MessageGeneralFactory) GetReliableMessageFactory() ReliableMessageFact
 }
 
 // Override
-func (gf *MessageGeneralFactory) ParseReliableMessage(msg interface{}) ReliableMessage {
+func (gf *MessageGeneralFactory) ParseReliableMessage(msg any) ReliableMessage {
 	if msg == nil {
 		return nil
 	} else if rMsg, ok := msg.(ReliableMessage); ok {

@@ -85,7 +85,7 @@ func (gf *CryptoKeyGeneralFactory) GenerateSymmetricKey(algorithm string) Symmet
 }
 
 // Override
-func (gf *CryptoKeyGeneralFactory) ParseSymmetricKey(key interface{}) SymmetricKey {
+func (gf *CryptoKeyGeneralFactory) ParseSymmetricKey(key any) SymmetricKey {
 	if key == nil {
 		return nil
 	} else if symmetricKey, ok := key.(SymmetricKey); ok {
@@ -130,7 +130,7 @@ func (gf *CryptoKeyGeneralFactory) GeneratePrivateKey(algorithm string) PrivateK
 }
 
 // Override
-func (gf *CryptoKeyGeneralFactory) ParsePrivateKey(key interface{}) PrivateKey {
+func (gf *CryptoKeyGeneralFactory) ParsePrivateKey(key any) PrivateKey {
 	if key == nil {
 		return nil
 	} else if privateKey, ok := key.(PrivateKey); ok {
@@ -169,7 +169,7 @@ func (gf *CryptoKeyGeneralFactory) GetPublicKeyFactory(algorithm string) PublicK
 }
 
 // Override
-func (gf *CryptoKeyGeneralFactory) ParsePublicKey(key interface{}) PublicKey {
+func (gf *CryptoKeyGeneralFactory) ParsePublicKey(key any) PublicKey {
 	if key == nil {
 		return nil
 	} else if publicKey, ok := key.(PublicKey); ok {
