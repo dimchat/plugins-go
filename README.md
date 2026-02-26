@@ -316,21 +316,21 @@ type CommonExtensionLoader struct {
 func (loader CommonExtensionLoader) Load() {
 	loader.ExtensionLoader.Load()
 
-	registerCustomizedFactories()
+	registerContentFactories()
 
 	registerCommandFactories()
 
 }
 
 /**
- *  Customized content factories
+ *  Extended content factories
  */
 
-func registerCustomizedFactories() {
+func registerContentFactories() {
 
 	// Application Customized Content
+	registerContentCreator(ContentType.APPLICATION, NewAppContentWithMap)
 	registerContentCreator(ContentType.CUSTOMIZED, NewCustomizedContentWithMap)
-	registerContentCreator(ContentType.APPLICATION, NewCustomizedContentWithMap)
 
 }
 
@@ -340,12 +340,12 @@ func registerContentCreator(msgType string, fn FuncCreateContent) {
 }
 
 /**
- *  Core command factories
+ *  Extended command factories
  */
 
 func registerCommandFactories() {
 
-	// Handshake
+	// Handshake Command
 	registerCommandCreator(HANDSHAKE, NewHandshakeCommandWithMap)
 
 }

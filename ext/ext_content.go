@@ -84,18 +84,6 @@ func registerContentFactories() {
 
 }
 
-/**
- *  Customized content factories
- */
-
-func registerCustomizedFactories() {
-
-	// Application Customized Content
-	registerContentCreator(ContentType.CUSTOMIZED, NewCustomizedContentWithMap)
-	//registerContentCreator(ContentType.APPLICATION, NewCustomizedContentWithMap)
-
-}
-
 func registerContentCreator(msgType string, fn FuncCreateContent) {
 	factory := NewContentFactory(fn)
 	SetContentFactory(msgType, factory)

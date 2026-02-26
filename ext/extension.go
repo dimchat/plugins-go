@@ -126,7 +126,6 @@ func (loader ExtensionLoader) RegisterMessageFactories() {
 // protected
 func (loader ExtensionLoader) RegisterContentFactories() {
 	registerContentFactories()
-	registerCustomizedFactories()
 }
 
 /**
